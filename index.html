@@ -1,1 +1,58 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Details</title>
+</head>
+<body>
+    <h1>Request Details</h1>
+
+    <div id="requestDetails"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var requestDetails = {};
+
+            // URL and query parameters
+            requestDetails.url = window.location.href;
+            requestDetails.queryParameters = {};
+            if (window.location.search) {
+                var queryParams = window.location.search.substring(1).split('&');
+                queryParams.forEach(function(param) {
+                    var parts = param.split('=');
+                    requestDetails.queryParameters[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+                });
+            }
+
+            // HTTP method
+            requestDetails.method = 'GET'; // Default for JavaScript in the browser
+
+            // Headers
+            var headers = {};
+            var req = new XMLHttpRequest();
+            req.open('GET', window.location.href, false); // Synchronous request to get headers
+            req.send(null);
+            var headerLines = req.getAllResponseHeaders().trim().split(/[\r\n]+/);
+            headerLines.forEach(function(line) {
+                var parts = line.split(': ');
+                var header = parts.shift();
+                var value = parts.join(': ');
+                headers[header] = value;
+            });
+            requestDetails.headers = headers;
+
+            // User Agent
+            requestDetails.userAgent = navigator.userAgent;
+
+            // Remote IP (not directly accessible in browser JavaScript due to security reasons)
+            // For remote IP, you typically need server-side processing or proxy services.
+
+            // Display request details
+            var detailsElement = document.getElementById('requestDetails');
+            detailsElement.textContent = JSON.stringify(requestDetails, null, 2);
+        });
+    </script>
+</body>
+</html>
+
