@@ -71,10 +71,14 @@
             
             // Form data
             const formData = new FormData(this);
-            const params = new URLSearchParams(formData).toString();
+            const issuerUri = formData.get('issuer_uri');
+            const clientId = formData.get('client_id');
+            const redirectUri = encodeURIComponent('http://localhost:8083');
+            const scopes = formData.get('requested_scopes').replace(/\s+/g, '+');
+            const codeVerifier = 'helloworld'; // Replace with actual code verifier logic if needed
 
-            // Example URL to start the flow
-            const startFlowUrl = `https://fukuoka.cloudflareaccess.com/cdn-cgi/access/sso/oidc/10a28c4f6a6f90d29bebf7ae28e4c04b2bcad2f4bf587821b9a468358b8fea29/authorization?${params}&response_type=code&response_mode=form_post&code_challenge_method=S256&state=c53ygj0v7j&nonce=zxjfjiwnd6`;
+            // Constructing the URL
+            const startFlowUrl = `${issuerUri}/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=c53ygj0v7j&nonce=zxjfjiwnd6`;
 
             // Normally you would redirect the user to startFlowUrl or handle the response
             // Since we cannot perform actual redirects in this environment, simulate the response
