@@ -20,6 +20,11 @@
                 <input type="text" class="form-control" id="client_id" name="client_id" required>
             </div>
             <div class="form-group">
+                <label for="redirect_uri">Redirect URI:</label>
+                <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="http://localhost:8083" required>
+                <small class="form-text text-muted">Ensure this matches one of your authorized redirect URIs.</small>
+            </div>
+            <div class="form-group">
                 <label for="requested_scopes">Requested Scopes:</label>
                 <input type="text" class="form-control" id="requested_scopes" name="requested_scopes" required>
                 <small class="form-text text-muted">Separate multiple scopes with spaces or commas.</small>
@@ -46,17 +51,6 @@
             </div>
             <button type="submit" class="btn btn-primary">Start Flow</button>
         </form>
-        <hr>
-        <div id="codeSection" style="display: none;">
-            <h3>Authorization Code Received:</h3>
-            <p id="codeDisplay"></p>
-            <button id="exchangeBtn" class="btn btn-success">Exchange Code for Token</button>
-        </div>
-        <hr>
-        <div id="tokenSection" style="display: none;">
-            <h3>Access Token Received:</h3>
-            <p id="tokenDisplay"></p>
-        </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
@@ -73,39 +67,17 @@
             const formData = new FormData(this);
             const issuerUri = formData.get('issuer_uri');
             const clientId = formData.get('client_id');
-            const redirectUri = encodeURIComponent('http://localhost:8083');
+            const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
             const scopes = formData.get('requested_scopes').replace(/\s+/g, '+');
-            const codeVerifier = 'helloworld'; // Replace with actual code verifier logic if needed
+            const codeChallenge = 'k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68'; // Replace with actual code challenge logic if needed
+            const state = 'c53ygj0v7j'; // Replace with actual state logic if needed
+            const nonce = 'zxjfjiwnd6'; // Replace with actual nonce logic if needed
 
             // Constructing the URL
-            const startFlowUrl = `${issuerUri}/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=c53ygj0v7j&nonce=zxjfjiwnd6`;
+            const authorizationUrl = `${issuerUri}/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}`;
 
-            // Normally you would redirect the user to startFlowUrl or handle the response
-            // Since we cannot perform actual redirects in this environment, simulate the response
-            alert(`Simulating redirect to:\n\n${startFlowUrl}`);
-
-            // Display the code section
-            document.getElementById('codeSection').style.display = 'block';
-            document.getElementById('codeDisplay').textContent = 'Auxher5CFT8YbTaw27zMmI2PhxMdVrfa'; // Example code received
-        });
-
-        document.getElementById('exchangeBtn').addEventListener('click', function() {
-            // Example data for token exchange
-            const tokenExchangeData = {
-                grant_type: 'authorization_code',
-                client_id: '10a28c4f6a6f90d29bebf7ae28e4c04b2bcad2f4bf587821b9a468358b8fea29',
-                client_secret: '8f032a6003950064467c13a6d079ee574b88cfeaa23987ce0ba91ef484af06fc',
-                code_verifier: document.getElementById('code_verifier').value,
-                code: 'Auxher5CFT8YbTaw27zMmI2PhxMdVrfa', // Example code received
-                redirect_uri: document.getElementById('redirect_uri').value
-            };
-
-            // Simulate token exchange request
-            alert('Simulating token exchange request:\n\n' + JSON.stringify(tokenExchangeData, null, 2));
-
-            // Display the token section
-            document.getElementById('tokenSection').style.display = 'block';
-            document.getElementById('tokenDisplay').textContent = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjIwMTc5M'; // Example access token received
+            // Redirect user to authorization URL
+            window.location.href = authorizationUrl;
         });
     </script>
 </body>
