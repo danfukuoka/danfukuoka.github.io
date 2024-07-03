@@ -74,7 +74,7 @@
             const nonce = 'zxjfjiwnd6'; // Replace with actual nonce logic if needed
 
             // Constructing the URL
-            const authorizationUrl = `${issuerUri}/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}`;
+            const authorizationUrl = `${issuerUri}/oauth2/v2.0/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}`;
 
             // Redirect user to authorization URL
             window.location.href = authorizationUrl;
