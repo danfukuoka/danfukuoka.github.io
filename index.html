@@ -1,13 +1,87 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OIDC Flow Diagnostic Tool</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">OIDC Flow Diagnostic Tool</h1>
+        <form id="oidcForm">
+            <div class="form-group">
+                <label for="client_id">Client ID:</label>
+                <input type="text" class="form-control" id="client_id" name="client_id" required>
+            </div>
+            <div class="form-group">
+                <label for="redirect_uri">Redirect URI:</label>
+                <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" required>
+            </div>
+            <div class="form-group">
+                <label for="code_verifier">Code Verifier:</label>
+                <input type="text" class="form-control" id="code_verifier" name="code_verifier" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Start Flow</button>
+        </form>
+        <hr>
+        <div id="codeSection" style="display: none;">
+            <h3>Authorization Code Received:</h3>
+            <p id="codeDisplay"></p>
+            <button id="exchangeBtn" class="btn btn-success">Exchange Code for Token</button>
+        </div>
+        <hr>
+        <div id="tokenSection" style="display: none;">
+            <h3>Access Token Received:</h3>
+            <p id="tokenDisplay"></p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Your custom JavaScript -->
+    <script>
+        document.getElementById('oidcForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Form data
+            const formData = new FormData(this);
+            const params = new URLSearchParams(formData).toString();
+
+            // Example URL to start the flow
+            const startFlowUrl = `https://fukuoka.cloudflareaccess.com/cdn-cgi/access/sso/oidc/10a28c4f6a6f90d29bebf7ae28e4c04b2bcad2f4bf587821b9a468358b8fea29/authorization?${params}&scope=openid&response_type=code&response_mode=form_post&code_challenge_method=S256&state=c53ygj0v7j&nonce=zxjfjiwnd6`;
+
+            // Normally you would redirect the user to startFlowUrl or handle the response
+            // Since we cannot perform actual redirects in this environment, simulate the response
+            alert(`Simulating redirect to:\n\n${startFlowUrl}`);
+
+            // Display the code section
+            document.getElementById('codeSection').style.display = 'block';
+            document.getElementById('codeDisplay').textContent = 'Auxher5CFT8YbTaw27zMmI2PhxMdVrfa'; // Example code received
+        });
+
+        document.getElementById('exchangeBtn').addEventListener('click', function() {
+            // Example data for token exchange
+            const tokenExchangeData = {
+                grant_type: 'authorization_code',
+                client_id: '10a28c4f6a6f90d29bebf7ae28e4c04b2bcad2f4bf587821b9a468358b8fea29',
+                client_secret: '8f032a6003950064467c13a6d079ee574b88cfeaa23987ce0ba91ef484af06fc',
+                code_verifier: document.getElementById('code_verifier').value,
+                code: 'Auxher5CFT8YbTaw27zMmI2PhxMdVrfa', // Example code received
+                redirect_uri: document.getElementById('redirect_uri').value
+            };
+
+            // Simulate token exchange request
+            alert('Simulating token exchange request:\n\n' + JSON.stringify(tokenExchangeData, null, 2));
+
+            // Display the token section
+            document.getElementById('tokenSection').style.display = 'block';
+            document.getElementById('tokenDisplay').textContent = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjIwMTc5M'; // Example access token received
+        });
+    </script>
+</body>
 </html>
