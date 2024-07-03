@@ -65,19 +65,13 @@
             
             // Form data
             const formData = new FormData(this);
-            const issuerUri = formData.get('issuer_uri');
-            const clientId = formData.get('client_id');
-            const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
-            const scopes = formData.get('requested_scopes').replace(/\s+/g, '+');
-            const codeChallenge = 'k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68'; // Replace with actual code challenge logic if needed
-            const state = 'c53ygj0v7j'; // Replace with actual state logic if needed
-            const nonce = 'zxjfjiwnd6'; // Replace with actual nonce logic if needed
+            const formDataJson = JSON.stringify(Object.fromEntries(formData)); // Convert FormData to JSON string
+            
+            // Store form data in sessionStorage
+            sessionStorage.setItem('oidcFormData', formDataJson);
 
-            // Constructing the URL
-            const authorizationUrl = `${issuerUri}/oauth2/v2.0/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}`;
-
-            // Redirect user to authorization URL
-            window.location.href = authorizationUrl;
+            // Redirect to token.html
+            window.location.href = 'token.html';
         });
     </script>
 </body>
