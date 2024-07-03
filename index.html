@@ -12,16 +12,37 @@
         <h1 class="mb-4">OIDC Flow Diagnostic Tool</h1>
         <form id="oidcForm">
             <div class="form-group">
+                <label for="issuer_uri">Issuer URI:</label>
+                <input type="url" class="form-control" id="issuer_uri" name="issuer_uri" required>
+            </div>
+            <div class="form-group">
                 <label for="client_id">Client ID:</label>
                 <input type="text" class="form-control" id="client_id" name="client_id" required>
             </div>
             <div class="form-group">
-                <label for="redirect_uri">Redirect URI:</label>
-                <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" required>
+                <label for="requested_scopes">Requested Scopes:</label>
+                <input type="text" class="form-control" id="requested_scopes" name="requested_scopes" required>
+                <small class="form-text text-muted">Separate multiple scopes with spaces or commas.</small>
             </div>
             <div class="form-group">
-                <label for="code_verifier">Code Verifier:</label>
-                <input type="text" class="form-control" id="code_verifier" name="code_verifier" required>
+                <label for="user_claim">User Claim:</label>
+                <input type="text" class="form-control" id="user_claim" name="user_claim">
+                <small class="form-text text-muted">Optional: The claim name for the user identifier.</small>
+            </div>
+            <div class="form-group">
+                <label for="groups_claim">Groups Claim:</label>
+                <input type="text" class="form-control" id="groups_claim" name="groups_claim">
+                <small class="form-text text-muted">Optional: The claim name for user groups.</small>
+            </div>
+            <div class="form-group">
+                <label for="audience">Audience:</label>
+                <input type="text" class="form-control" id="audience" name="audience" required>
+                <small class="form-text text-muted">The intended audience for the token.</small>
+            </div>
+            <div class="form-group">
+                <label for="associated_domains">Associated Domains:</label>
+                <input type="text" class="form-control" id="associated_domains" name="associated_domains">
+                <small class="form-text text-muted">Optional: Domains that are associated with this client.</small>
             </div>
             <button type="submit" class="btn btn-primary">Start Flow</button>
         </form>
@@ -53,7 +74,7 @@
             const params = new URLSearchParams(formData).toString();
 
             // Example URL to start the flow
-            const startFlowUrl = `https://fukuoka.cloudflareaccess.com/cdn-cgi/access/sso/oidc/10a28c4f6a6f90d29bebf7ae28e4c04b2bcad2f4bf587821b9a468358b8fea29/authorization?${params}&scope=openid&response_type=code&response_mode=form_post&code_challenge_method=S256&state=c53ygj0v7j&nonce=zxjfjiwnd6`;
+            const startFlowUrl = `https://fukuoka.cloudflareaccess.com/cdn-cgi/access/sso/oidc/10a28c4f6a6f90d29bebf7ae28e4c04b2bcad2f4bf587821b9a468358b8fea29/authorization?${params}&response_type=code&response_mode=form_post&code_challenge_method=S256&state=c53ygj0v7j&nonce=zxjfjiwnd6`;
 
             // Normally you would redirect the user to startFlowUrl or handle the response
             // Since we cannot perform actual redirects in this environment, simulate the response
