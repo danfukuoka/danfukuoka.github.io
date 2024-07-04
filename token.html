@@ -10,6 +10,13 @@
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">OIDC Flow Diagnostic Tool - Token Display</h1>
+        
+        <!-- Display authorization code -->
+        <div id="authorizationCodeDisplay">
+            <h3>Authorization Code:</h3>
+            <p id="codeDisplay"></p>
+        </div>
+        
         <div id="tokenSection">
             <h3>Access Token Received:</h3>
             <p id="tokenDisplay"></p>
@@ -36,6 +43,11 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
+        // Function to display authorization code
+        function displayAuthorizationCode(code) {
+            document.getElementById('codeDisplay').textContent = code;
+        }
+
         // Function to display access token
         function displayAccessToken(token) {
             document.getElementById('tokenDisplay').textContent = token;
@@ -45,6 +57,9 @@
         $(document).ready(function() {
             const authorizationCode = getParameterByName('code');
             const redirectUri = encodeURIComponent('http://localhost:8083'); // Replace with your actual redirect URI
+
+            // Display the authorization code
+            displayAuthorizationCode(authorizationCode);
 
             // Retrieve form data from sessionStorage (data stored from index.html)
             const formDataJson = sessionStorage.getItem('oidcFormData');
