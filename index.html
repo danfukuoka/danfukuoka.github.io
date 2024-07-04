@@ -20,12 +20,8 @@
                 <input type="text" class="form-control" id="client_id" name="client_id" value="9999efa7-f814-40df-85fc-b61011a764b9" required>
             </div>
             <div class="form-group">
-                <label for="client_secret">Client Secret:</label>
-                <input type="password" class="form-control" id="client_secret" name="client_secret" value="your_client_secret" required>
-            </div>
-            <div class="form-group">
                 <label for="redirect_uri">Redirect URI:</label>
-                <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="https://danfukuoka.github.io" required>
+                <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="https://danfukuoka.github.io/success.html" required>
                 <small class="form-text text-muted">Ensure this matches one of your authorized redirect URIs.</small>
             </div>
             <div class="form-group">
@@ -72,7 +68,6 @@
                 const formData = new FormData(this);
                 const issuerUri = formData.get('issuer_uri');
                 const clientId = formData.get('client_id');
-                const clientSecret = formData.get('client_secret');
                 const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
                 const requestedScopes = encodeURIComponent(formData.get('requested_scopes'));
 
@@ -137,7 +132,6 @@
                     const tokenExchangeData = {
                         grant_type: 'authorization_code',
                         client_id: formData.client_id,
-                        client_secret: formData.client_secret,
                         code_verifier: 'helloworld', // Replace with actual code verifier logic if needed
                         code: authorizationCode,
                         redirect_uri: formData.redirect_uri
@@ -158,6 +152,9 @@
                             document.getElementById('accessToken').textContent = response.access_token;
                             document.getElementById('refreshToken').textContent = response.refresh_token;
                             document.getElementById('expiresIn').textContent = response.expires_in;
+
+                            // Redirect to success page after token retrieval
+                            window.location.href = 'https://danfukuoka.github.io/success.html'; // Replace with your success page URL
                         },
                         error: function(xhr, status, error) {
                             console.error('Error exchanging authorization code:', error);
