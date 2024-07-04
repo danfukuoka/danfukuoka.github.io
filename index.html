@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">OIDC Flow Diagnostic Tool 4</h1>
+        <h1 class="mb-4">OIDC Flow Diagnostic Tool</h1>
         <form id="oidcForm">
             <div class="form-group">
                 <label for="issuer_uri">Issuer URI:</label>
@@ -18,6 +18,10 @@
             <div class="form-group">
                 <label for="client_id">Client ID:</label>
                 <input type="text" class="form-control" id="client_id" name="client_id" value="9999efa7-f814-40df-85fc-b61011a764b9" required>
+            </div>
+            <div class="form-group">
+                <label for="client_secret">Client Secret:</label>
+                <input type="password" class="form-control" id="client_secret" name="client_secret">
             </div>
             <div class="form-group">
                 <label for="redirect_uri">Redirect URI:</label>
@@ -57,6 +61,12 @@
                 const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
                 const requestedScopes = encodeURIComponent(formData.get('requested_scopes'));
 
+                // Optional: Client Secret
+                let clientSecret = formData.get('client_secret');
+                if (!clientSecret) {
+                    clientSecret = null; // Set to null if client_secret is not provided
+                }
+
                 // Authorization endpoint URL
                 const authorizationEndpoint = `${issuerUri}/oauth2/v2.0/authorize`;
 
@@ -66,6 +76,13 @@
 
                 // Construct the authorization URL
                 const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=${state}&nonce=${nonce}`;
+
+                // Store form data in sessionStorage
+                sessionStorage.setItem('oidcFormData', JSON.stringify({
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    redirect_uri: formData.get('redirect_uri')
+                }));
 
                 // Redirect to authorization URL
                 window.location.href = authUrl;
@@ -89,10 +106,6 @@
                 // Display the authorization code
                 document.getElementById('authorizationCodeSection').style.display = 'block';
                 document.getElementById('codeDisplay').textContent = authorizationCode;
-
-                // Redirect to success page with authorization code
-                const successUrl = `success.html?code=${authorizationCode}`;
-                window.location.href = successUrl;
             }
         });
     </script>
