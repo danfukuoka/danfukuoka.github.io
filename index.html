@@ -39,7 +39,7 @@
         <!-- Display authorization code -->
         <div id="authorizationCodeSection" class="mt-4" style="display: none;">
             <h3>Authorization Code Received:</h3>
-            <p id="authorizationCode"></p>
+            <p id="authorizationCodeDisplay"></p>
             <button id="exchangeTokenButton" class="btn btn-success">Exchange Code for Tokens</button>
         </div>
 
@@ -155,15 +155,14 @@
             if (authorizationCode) {
                 // Display the authorization code
                 $('#authorizationCodeSection').show();
-                $('#authorizationCode').text(authorizationCode);
+                $('#authorizationCodeDisplay').text(authorizationCode);
 
                 // Show the token exchange button
                 $('#exchangeTokenButton').show();
             }
 
             // Check if issuerUri is present in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const receivedIssuerUri = urlParams.get('issuerUri');
+            const receivedIssuerUri = sessionStorage.getItem('issuerUri');
             if (receivedIssuerUri) {
                 // Store received issuerUri in sessionStorage
                 sessionStorage.setItem('issuerUri', decodeURIComponent(receivedIssuerUri));
