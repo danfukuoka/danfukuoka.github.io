@@ -41,4 +41,56 @@
             const formData = JSON.parse(formDataJson);
 
             // Token endpoint URL
-            const tokenEndpoint = `${formData.
+            const tokenEndpoint = `${formData.issuer_uri}/oauth2/v2.0/token`;
+
+            // Retrieve authorization code from URL
+            const authorizationCode = getParameterByName('code');
+
+            // Retrieve code verifier from sessionStorage
+            const codeVerifier = formData.code_verifier;
+
+            // Token exchange data
+            const tokenExchangeData = {
+                grant_type: 'authorization_code',
+                client_id: formData.client_id,
+                code_verifier: codeVerifier,  // Use code_verifier in token exchange
+                code: authorizationCode,
+                redirect_uri: formData.redirect_uri
+            };
+
+            // Perform token exchange
+            $.ajax({
+                url: tokenEndpoint,
+                type: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: tokenExchangeData,
+                success: function(response) {
+                    console.log(response);
+                    // Display the tokens
+                    document.getElementById('tokenSection').style.display = 'block';
+                    document.getElementById('accessToken').textContent = response.access_token;
+                    document.getElementById('refreshToken').textContent = response.refresh_token;
+                    document.getElementById('expiresIn').textContent = response.expires_in;
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error exchanging authorization code:', error);
+                    alert('Error exchanging authorization code. Check console for details.');
+                }
+            });
+
+            // Function to extract query parameters from URL
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+        });
+    </script>
+</body>
+</html>
