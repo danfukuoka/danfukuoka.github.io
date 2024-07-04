@@ -11,11 +11,7 @@
     <div class="container mt-5">
         <h1 class="mb-4">Token Exchange Successful</h1>
 
-        <div class="alert alert-success" role="alert">
-            Tokens have been successfully exchanged and retrieved!
-        </div>
-
-        <div>
+        <div id="tokenSection" class="mt-4">
             <h3>Tokens Received:</h3>
             <p><strong>Access Token:</strong> <span id="accessToken"></span></p>
             <p><strong>Refresh Token:</strong> <span id="refreshToken"></span></p>
@@ -30,26 +26,57 @@
 
     <!-- Your custom JavaScript -->
     <script>
-        // Function to extract query parameters from URL
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
+        jQuery(document).ready(function($) {
+            // Function to extract query parameters from URL
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
 
-        // Retrieve tokens from URL parameters
-        const accessToken = getParameterByName('access_token');
-        const refreshToken = getParameterByName('refresh_token');
-        const expiresIn = getParameterByName('expires_in');
+            // Retrieve authorization code from URL parameters
+            const authorizationCode = getParameterByName('code');
 
-        // Display tokens on the page
-        document.getElementById('accessToken').textContent = accessToken;
-        document.getElementById('refreshToken').textContent = refreshToken;
-        document.getElementById('expiresIn').textContent = expiresIn;
+            if (authorizationCode) {
+                // Token endpoint URL
+                const tokenEndpoint = 'https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6/oauth2/v2.0/token'; // Replace with your token endpoint
+
+                // Token exchange data
+                const tokenExchangeData = {
+                    grant_type: 'authorization_code',
+                    client_id: '9999efa7-f814-40df-85fc-b61011a764b9', // Replace with your client ID
+                    client_secret: 'your_client_secret', // Replace with your client secret
+                    code: authorizationCode,
+                    redirect_uri: 'https://danfukuoka.github.io/success.html' // Replace with your redirect URI
+                };
+
+                // Perform token exchange
+                $.ajax({
+                    url: tokenEndpoint,
+                    type: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: tokenExchangeData,
+                    success: function(response) {
+                        console.log(response);
+                        // Display the tokens
+                        document.getElementById('tokenSection').style.display = 'block';
+                        document.getElementById('accessToken').textContent = response.access_token;
+                        document.getElementById('refreshToken').textContent = response.refresh_token;
+                        document.getElementById('expiresIn').textContent = response.expires_in;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error exchanging authorization code:', error);
+                        alert('Error exchanging authorization code. Check console for details.');
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>

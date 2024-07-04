@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">OIDC Flow Diagnostic Tool 3</h1>
+        <h1 class="mb-4">OIDC Flow Diagnostic Tool 4</h1>
         <form id="oidcForm">
             <div class="form-group">
                 <label for="issuer_uri">Issuer URI:</label>
@@ -36,20 +36,6 @@
         <div id="authorizationCodeSection" class="mt-4" style="display: none;">
             <h3>Authorization Code Received:</h3>
             <p id="codeDisplay"></p>
-        </div>
-
-        <!-- Exchange authorization code for tokens -->
-        <div id="tokenExchangeSection" class="mt-4" style="display: none;">
-            <h3>Exchange Authorization Code for Tokens</h3>
-            <button id="exchangeTokenButton" class="btn btn-success">Exchange the code to tokens</button>
-        </div>
-
-        <!-- Display tokens -->
-        <div id="tokenSection" class="mt-4" style="display: none;">
-            <h3>Tokens Received:</h3>
-            <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span></p>
-            <p id="refreshTokenDisplay"><strong>Refresh Token:</strong> <span id="refreshToken"></span></p>
-            <p id="expiresInDisplay"><strong>Expires In:</strong> <span id="expiresIn"></span></p>
         </div>
     </div>
 
@@ -81,13 +67,6 @@
                 // Construct the authorization URL
                 const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=${state}&nonce=${nonce}`;
 
-                // Store form data in sessionStorage
-                sessionStorage.setItem('oidcFormData', JSON.stringify({
-                    client_id: clientId,
-                    redirect_uri: formData.get('redirect_uri'),
-                    issuer_uri: issuerUri, // Added issuer_uri to store
-                }));
-
                 // Redirect to authorization URL
                 window.location.href = authUrl;
             });
@@ -111,58 +90,9 @@
                 document.getElementById('authorizationCodeSection').style.display = 'block';
                 document.getElementById('codeDisplay').textContent = authorizationCode;
 
-                // Display the token exchange section
-                document.getElementById('tokenExchangeSection').style.display = 'block';
-
-                // Exchange authorization code for tokens on button click
-                document.getElementById('exchangeTokenButton').addEventListener('click', function() {
-                    // Retrieve stored form data
-                    const formDataJson = sessionStorage.getItem('oidcFormData');
-                    if (!formDataJson) {
-                        console.error('Form data not found.');
-                        alert('Form data not found. Please initiate the flow again from index.html.');
-                        return;
-                    }
-                    const formData = JSON.parse(formDataJson);
-
-                    // Token endpoint URL
-                    const tokenEndpoint = `${formData.issuer_uri}/oauth2/v2.0/token`;
-
-                    // Token exchange data
-                    const tokenExchangeData = {
-                        grant_type: 'authorization_code',
-                        client_id: formData.client_id,
-                        code_verifier: 'helloworld', // Replace with actual code verifier logic if needed
-                        code: authorizationCode,
-                        redirect_uri: formData.redirect_uri
-                    };
-
-                    // Perform token exchange
-                    jQuery.ajax({
-                        url: tokenEndpoint,
-                        type: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        data: tokenExchangeData,
-                        success: function(response) {
-                            console.log(response);
-                            // Display the tokens
-                            document.getElementById('tokenSection').style.display = 'block';
-                            document.getElementById('accessToken').textContent = response.access_token;
-                            document.getElementById('refreshToken').textContent = response.refresh_token;
-                            document.getElementById('expiresIn').textContent = response.expires_in;
-
-                            // Redirect to success page after token retrieval
-                            const successUrl = `success.html?access_token=${response.access_token}&refresh_token=${response.refresh_token}&expires_in=${response.expires_in}`;
-                            window.location.href = successUrl; // Redirect to success.html with tokens as parameters
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error exchanging authorization code:', error);
-                            alert('Error exchanging authorization code. Check console for details.');
-                        }
-                    });
-                });
+                // Redirect to success page with authorization code
+                const successUrl = `success.html?code=${authorizationCode}`;
+                window.location.href = successUrl;
             }
         });
     </script>
