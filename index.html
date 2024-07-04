@@ -21,35 +21,15 @@
             </div>
             <div class="form-group">
                 <label for="redirect_uri">Redirect URI:</label>
-                <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="https://danfukuoka.github.io/token.html" required>
+                <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="http://localhost:8083" required>
                 <small class="form-text text-muted">Ensure this matches one of your authorized redirect URIs.</small>
             </div>
             <div class="form-group">
                 <label for="requested_scopes">Requested Scopes:</label>
-                <input type="text" class="form-control" id="requested_scopes" name="requested_scopes" value="9999efa7-f814-40df-85fc-b61011a764b9/.default" required>
+                <input type="text" class="form-control" id="requested_scopes" name="requested_scopes" value="openid" required>
                 <small class="form-text text-muted">Separate multiple scopes with spaces or commas.</small>
             </div>
-            <div class="form-group">
-                <label for="user_claim">User Claim:</label>
-                <input type="text" class="form-control" id="user_claim" name="user_claim" value="upn">
-                <small class="form-text text-muted">Optional: The claim name for the user identifier.</small>
-            </div>
-            <div class="form-group">
-                <label for="groups_claim">Groups Claim:</label>
-                <input type="text" class="form-control" id="groups_claim" name="groups_claim" value="groups">
-                <small class="form-text text-muted">Optional: The claim name for user groups.</small>
-            </div>
-            <div class="form-group">
-                <label for="audience">Audience:</label>
-                <input type="text" class="form-control" id="audience" name="audience" value="9999efa7-f814-40df-85fc-b61011a764b9" required>
-                <small class="form-text text-muted">The intended audience for the token.</small>
-            </div>
-            <div class="form-group">
-                <label for="associated_domains">Associated Domains:</label>
-                <input type="text" class="form-control" id="associated_domains" value="danilo.work" name="associated_domains">
-                <small class="form-text text-muted">Optional: Domains that are associated with this client.</small>
-            </div>
-            <button type="submit" class="btn btn-primary">Start Flow</button>
+            <button type="submit" class="btn btn-primary">Get the authorization code</button>
         </form>
     </div>
 
@@ -62,16 +42,32 @@
     <script>
         document.getElementById('oidcForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            
+
             // Form data
             const formData = new FormData(this);
-            const formDataJson = JSON.stringify(Object.fromEntries(formData)); // Convert FormData to JSON string
-            
-            // Store form data in sessionStorage
-            sessionStorage.setItem('oidcFormData', formDataJson);
+            const issuerUri = formData.get('issuer_uri');
+            const clientId = formData.get('client_id');
+            const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
+            const requestedScopes = encodeURIComponent(formData.get('requested_scopes'));
 
-            // Redirect to token.html
-            window.location.href = 'token.html';
+            // Authorization endpoint URL
+            const authorizationEndpoint = `${issuerUri}/oauth2/v2.0/authorize`;
+
+            // Generate a unique state and nonce
+            const state = Math.random().toString(36).substring(7);
+            const nonce = Math.random().toString(36).substring(7);
+
+            // Construct the authorization URL
+            const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=${state}&nonce=${nonce}`;
+
+            // Store form data in sessionStorage
+            sessionStorage.setItem('oidcFormData', JSON.stringify({
+                client_id: clientId,
+                redirect_uri: formData.get('redirect_uri')
+            }));
+
+            // Redirect to authorization URL
+            window.location.href = authUrl;
         });
     </script>
 </body>
