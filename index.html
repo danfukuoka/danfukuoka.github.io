@@ -80,8 +80,8 @@
                 // Authorization endpoint URL
                 const authorizationEndpoint = `${issuerUri}/oauth2/v2.0/authorize`;
 
-                // Construct the authorization URL
-                const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}`;
+                // Construct the authorization URL with issuerUri as a query parameter
+                const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}&issuerUri=${encodeURIComponent(issuerUri)}`;
 
                 // Redirect to authorization URL
                 window.location.href = authUrl;
@@ -93,6 +93,7 @@
                 const clientSecret = $('#client_secret').val(); // Optional
                 const redirectUri = $('#redirect_uri').val();
                 const codeVerifier = $('#code_verifier').val();
+                const issuerUri = getIssuerUri(); // Get issuerUri from URL
 
                 // Token endpoint URL
                 const tokenEndpoint = `${issuerUri}/oauth2/v2.0/token`;
@@ -136,6 +137,12 @@
                     .replace(/\+/g, '-')
                     .replace(/\//g, '_')
                     .replace(/=+$/, '');
+            }
+
+            // Function to get issuerUri from URL parameters
+            function getIssuerUri() {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get('issuerUri');
             }
 
             // Function to get authorization code from URL parameters
