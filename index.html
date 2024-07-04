@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">OIDC Flow Diagnostic Tool 5</h1>
+        <h1 class="mb-4">OIDC Flow Diagnostic Tool</h1>
         <form id="oidcForm">
             <div class="form-group">
                 <label for="issuer_uri">Issuer URI:</label>
@@ -86,7 +86,8 @@
                 sessionStorage.setItem('oidcFormData', JSON.stringify({
                     client_id: clientId,
                     client_secret: clientSecret,
-                    redirect_uri: formData.get('redirect_uri')
+                    redirect_uri: formData.get('redirect_uri'),
+                    code_verifier: codeVerifier  // Store code_verifier in sessionStorage
                 }));
 
                 // Redirect to authorization URL
