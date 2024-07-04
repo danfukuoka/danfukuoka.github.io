@@ -59,10 +59,11 @@
                     grant_type: 'authorization_code',
                     client_id: formData.client_id,
                     code: authorizationCode,
-                    redirect_uri: 'https://danfukuoka.github.io/success.html' // Replace with your redirect URI
+                    redirect_uri: 'https://danfukuoka.github.io/success.html', // Ensure this matches your redirect URI
+                    code_verifier: formData.code_verifier // Add the code_verifier parameter
                 };
 
-                // Add client_secret if provided in index.html
+                // Add optional client_secret if provided in index.html
                 if (formData.client_secret) {
                     tokenExchangeData.client_secret = formData.client_secret;
                 }
