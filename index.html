@@ -39,7 +39,7 @@
         <!-- Display authorization code -->
         <div id="authorizationCodeSection" class="mt-4" style="display: none;">
             <h3>Authorization Code Received:</h3>
-            <p id="codeDisplay"></p>
+            <p id="authorizationCode"></p>
             <button id="exchangeTokenButton" class="btn btn-success">Exchange Code for Tokens</button>
         </div>
 
@@ -155,7 +155,7 @@
             if (authorizationCode) {
                 // Display the authorization code
                 $('#authorizationCodeSection').show();
-                $('#codeDisplay').text(authorizationCode);
+                $('#authorizationCode').text(authorizationCode);
 
                 // Show the token exchange button
                 $('#exchangeTokenButton').show();
