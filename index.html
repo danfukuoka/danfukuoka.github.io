@@ -100,8 +100,9 @@
                 // Retrieve issuerUri from sessionStorage
                 const issuerUri = sessionStorage.getItem('issuerUri');
 
-                // Token endpoint URL
-                const tokenEndpoint = `${issuerUri}/oauth2/v2.0/token`;
+                // Token endpoint URL (using cors-anywhere proxy)
+                const corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/';
+                const tokenEndpoint = `${corsAnywhereUrl}${issuerUri}/oauth2/v2.0/token`;
 
                 // Token exchange data
                 const tokenExchangeData = {
