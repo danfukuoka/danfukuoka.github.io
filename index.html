@@ -91,7 +91,7 @@
             });
 
             $('#exchangeTokenButton').click(function() {
-                const authorizationCode = $('#authorizationCode').val();
+                const authorizationCode = $('#authorizationCodeDisplay').text()
                 const clientId = $('#client_id').val();
                 const clientSecret = $('#client_secret').val(); // Optional
                 const redirectUri = $('#redirect_uri').val();
