@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">OIDC Flow Diagnostic Tool</h1>
+        <h1 class="mb-4">OIDC Flow Diagnostic Tool 2</h1>
         <form id="oidcForm">
             <div class="form-group">
                 <label for="issuer_uri">Issuer URI:</label>
@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
                 <label for="code_verifier">Code Verifier:</label>
-                <input type="text" class="form-control" id="code_verifier" name="code_verifier" value="hello-world" required readonly>
+                <input type="text" class="form-control" id="code_verifier" name="code_verifier" value="hello-world" required>
             </div>
             <button type="submit" class="btn btn-primary">Get the authorization code</button>
         </form>
@@ -52,6 +52,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    <!-- CryptoJS library for SHA-256 hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
     <!-- Your custom JavaScript -->
     <script>
         jQuery(document).ready(function($) {
@@ -64,7 +67,7 @@
                 const clientId = formData.get('client_id');
                 const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
                 const requestedScopes = encodeURIComponent(formData.get('requested_scopes'));
-                const codeVerifier = formData.get('code_verifier');
+                let codeVerifier = formData.get('code_verifier');
 
                 // Optional: Client Secret
                 let clientSecret = formData.get('client_secret');
@@ -72,15 +75,15 @@
                     clientSecret = null; // Set to null if client_secret is not provided
                 }
 
-                // Authorization endpoint URL
-                const authorizationEndpoint = `${issuerUri}/oauth2/v2.0/authorize`;
-
                 // Generate a unique state and nonce
                 const state = Math.random().toString(36).substring(7);
                 const nonce = Math.random().toString(36).substring(7);
 
                 // Generate code challenge from code verifier
                 const codeChallenge = base64URL(CryptoJS.SHA256(codeVerifier));
+
+                // Authorization endpoint URL
+                const authorizationEndpoint = `${issuerUri}/oauth2/v2.0/authorize`;
 
                 // Construct the authorization URL
                 const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}&code_verifier=${codeVerifier}`;
@@ -96,26 +99,6 @@
                 // Redirect to authorization URL
                 window.location.href = authUrl;
             });
-
-            // Function to extract query parameters from URL
-            function getParameterByName(name, url) {
-                if (!url) url = window.location.href;
-                name = name.replace(/[\[\]]/g, '\\$&');
-                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                    results = regex.exec(url);
-                if (!results) return null;
-                if (!results[2]) return '';
-                return decodeURIComponent(results[2].replace(/\+/g, ' '));
-            }
-
-            // On page load, check for authorization code in URL
-            const authorizationCode = getParameterByName('code');
-
-            if (authorizationCode) {
-                // Display the authorization code
-                document.getElementById('authorizationCodeSection').style.display = 'block';
-                document.getElementById('codeDisplay').textContent = authorizationCode;
-            }
 
             // Function to convert SHA-256 hash to Base64 URL encoded string
             function base64URL(buffer) {
