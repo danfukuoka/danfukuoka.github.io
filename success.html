@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Success Page</title>
+    <title>OIDC Flow - Token Received</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Token Exchange Successful</h1>
+        <h1 class="mb-4">OIDC Flow - Token Received</h1>
 
+        <!-- Display tokens -->
         <div id="tokenSection" class="mt-4">
             <h3>Tokens Received:</h3>
-            <p><strong>Access Token:</strong> <span id="accessToken"></span></p>
-            <p><strong>Refresh Token:</strong> <span id="refreshToken"></span></p>
-            <p><strong>Expires In:</strong> <span id="expiresIn"></span></p>
+            <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span></p>
+            <p id="refreshTokenDisplay"><strong>Refresh Token:</strong> <span id="refreshToken"></span></p>
+            <p id="expiresInDisplay"><strong>Expires In:</strong> <span id="expiresIn"></span></p>
         </div>
     </div>
 
@@ -24,73 +25,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    <!-- CryptoJS library for SHA-256 hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
     <!-- Your custom JavaScript -->
     <script>
         jQuery(document).ready(function($) {
-            // Function to extract query parameters from URL
-            function getParameterByName(name, url) {
-                if (!url) url = window.location.href;
-                name = name.replace(/[\[\]]/g, '\\$&');
-                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                    results = regex.exec(url);
-                if (!results) return null;
-                if (!results[2]) return '';
-                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            // Retrieve stored form data from sessionStorage
+            const formDataJson = sessionStorage.getItem('oidcFormData');
+            if (!formDataJson) {
+                console.error('Form data not found.');
+                alert('Form data not found. Please initiate the flow again from index.html.');
+                return;
             }
+            const formData = JSON.parse(formDataJson);
 
-            // Retrieve authorization code from URL parameters
-            const authorizationCode = getParameterByName('code');
-
-            if (authorizationCode) {
-                // Retrieve stored form data from sessionStorage
-                const formDataJson = sessionStorage.getItem('oidcFormData');
-                if (!formDataJson) {
-                    console.error('Form data not found.');
-                    alert('Form data not found. Please initiate the flow again from index.html.');
-                    return;
-                }
-                const formData = JSON.parse(formDataJson);
-
-                // Token endpoint URL
-                const tokenEndpoint = 'https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6/oauth2/v2.0/token'; // Replace with your token endpoint
-
-                // Token exchange data
-                const tokenExchangeData = {
-                    grant_type: 'authorization_code',
-                    client_id: formData.client_id,
-                    code: authorizationCode,
-                    redirect_uri: 'https://danfukuoka.github.io/success.html', // Ensure this matches your redirect URI
-                    code_verifier: formData.code_verifier // Add the code_verifier parameter
-                };
-
-                // Add optional client_secret if provided in index.html
-                if (formData.client_secret) {
-                    tokenExchangeData.client_secret = formData.client_secret;
-                }
-
-                // Perform token exchange
-                $.ajax({
-                    url: tokenEndpoint,
-                    type: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    data: tokenExchangeData,
-                    success: function(response) {
-                        console.log(response);
-                        // Display the tokens
-                        document.getElementById('tokenSection').style.display = 'block';
-                        document.getElementById('accessToken').textContent = response.access_token;
-                        document.getElementById('refreshToken').textContent = response.refresh_token;
-                        document.getElementById('expiresIn').textContent = response.expires_in;
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error exchanging authorization code:', error);
-                        alert('Error exchanging authorization code. Check console for details.');
-                    }
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+            // Token endpoint URL
+            const tokenEndpoint = `${formData.
