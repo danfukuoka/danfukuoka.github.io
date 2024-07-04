@@ -33,8 +33,23 @@
                 <label for="code_verifier">Code Verifier:</label>
                 <input type="text" class="form-control" id="code_verifier" name="code_verifier" value="hello-world" required>
             </div>
-            <button type="submit" class="btn btn-primary">Get the authorization code</button>
+            <button type="button" id="authorizeButton" class="btn btn-primary">Authorize</button>
         </form>
+
+        <!-- Display authorization code -->
+        <div id="authorizationCodeSection" class="mt-4" style="display: none;">
+            <h3>Authorization Code Received:</h3>
+            <p id="codeDisplay"></p>
+            <button id="exchangeTokenButton" class="btn btn-success">Exchange Code for Tokens</button>
+        </div>
+
+        <!-- Display tokens -->
+        <div id="tokenSection" class="mt-4" style="display: none;">
+            <h3>Tokens Received:</h3>
+            <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span></p>
+            <p id="refreshTokenDisplay"><strong>Refresh Token:</strong> <span id="refreshToken"></span></p>
+            <p id="expiresInDisplay"><strong>Expires In:</strong> <span id="expiresIn"></span></p>
+        </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
@@ -42,19 +57,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    <!-- CryptoJS library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+
     <!-- Your custom JavaScript -->
     <script>
-        jQuery(document).ready(function($) {
-            document.getElementById('oidcForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                // Form data
-                const formData = new FormData(this);
-                const issuerUri = formData.get('issuer_uri');
-                const clientId = formData.get('client_id');
-                const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
-                const requestedScopes = encodeURIComponent(formData.get('requested_scopes'));
-                let codeVerifier = formData.get('code_verifier');
+        $(document).ready(function() {
+            $('#authorizeButton').click(function() {
+                const issuerUri = $('#issuer_uri').val();
+                const clientId = $('#client_id').val();
+                const redirectUri = encodeURIComponent($('#redirect_uri').val());
+                const requestedScopes = encodeURIComponent($('#requested_scopes').val());
+                const codeVerifier = $('#code_verifier').val();
 
                 // Generate a unique state and nonce
                 const state = Math.random().toString(36).substring(7);
@@ -71,6 +85,49 @@
 
                 // Redirect to authorization URL
                 window.location.href = authUrl;
+            });
+
+            $('#exchangeTokenButton').click(function() {
+                const authorizationCode = $('#authorizationCode').val();
+                const clientId = $('#client_id').val();
+                const clientSecret = $('#client_secret').val(); // Optional
+                const redirectUri = $('#redirect_uri').val();
+                const codeVerifier = $('#code_verifier').val();
+
+                // Token endpoint URL
+                const tokenEndpoint = `${issuerUri}/oauth2/v2.0/token`;
+
+                // Token exchange data
+                const tokenExchangeData = {
+                    grant_type: 'authorization_code',
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    code_verifier: codeVerifier,
+                    code: authorizationCode,
+                    redirect_uri: redirectUri
+                };
+
+                // Perform token exchange
+                $.ajax({
+                    url: tokenEndpoint,
+                    type: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: tokenExchangeData,
+                    success: function(response) {
+                        console.log(response);
+                        // Display the tokens
+                        $('#tokenSection').show();
+                        $('#accessToken').text(response.access_token);
+                        $('#refreshToken').text(response.refresh_token);
+                        $('#expiresIn').text(response.expires_in);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error exchanging authorization code:', error);
+                        alert('Error exchanging authorization code. Check console for details.');
+                    }
+                });
             });
 
             // Function to convert SHA-256 hash to Base64 URL encoded string
