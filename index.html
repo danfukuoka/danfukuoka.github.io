@@ -36,19 +36,11 @@
             <button type="button" id="authorizeButton" class="btn btn-primary">Authorize</button>
         </form>
 
-        <!-- Display authorization code -->
-        <div id="authorizationCodeSection" class="mt-4" style="display: none;">
-            <h3>Authorization Code Received:</h3>
-            <p id="authorizationCodeDisplay"></p>
-            <button id="exchangeTokenButton" class="btn btn-success">Exchange Code for Tokens</button>
-        </div>
-
         <!-- Display tokens -->
         <div id="tokenSection" class="mt-4" style="display: none;">
             <h3>Tokens Received:</h3>
             <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span></p>
-            <p id="refreshTokenDisplay"><strong>Refresh Token:</strong> <span id="refreshToken"></span></p>
-            <p id="expiresInDisplay"><strong>Expires In:</strong> <span id="expiresIn"></span></p>
+            <p id="idTokenDisplay"><strong>ID Token:</strong> <span id="idToken"></span></p>
         </div>
     </div>
 
@@ -91,7 +83,7 @@
             });
 
             $('#exchangeTokenButton').click(function() {
-                const authorizationCode = $('#authorizationCodeDisplay').text()
+                const authorizationCode = $('#authorizationCodeDisplay').text();
                 const clientId = $('#client_id').val();
                 const clientSecret = $('#client_secret').val(); // Optional
                 const redirectUri = $('#redirect_uri').val();
@@ -126,8 +118,7 @@
                         // Display the tokens
                         $('#tokenSection').show();
                         $('#accessToken').text(response.access_token);
-                        $('#refreshToken').text(response.refresh_token);
-                        $('#expiresIn').text(response.expires_in);
+                        $('#idToken').text(response.id_token);
                     },
                     error: function(xhr, status, error) {
                         console.error('Error exchanging authorization code:', error);
