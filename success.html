@@ -3,92 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OIDC Flow - Token Received</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>OIDC Flow Success</title>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">OIDC Flow - Token Received</h1>
+    <h1>Token Exchange Successful</h1>
 
-        <!-- Display tokens -->
-        <div id="tokenSection" class="mt-4">
-            <h3>Tokens Received:</h3>
-            <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span></p>
-            <p id="refreshTokenDisplay"><strong>Refresh Token:</strong> <span id="refreshToken"></span></p>
-            <p id="expiresInDisplay"><strong>Expires In:</strong> <span id="expiresIn"></span></p>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- CryptoJS library for SHA-256 hashing -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-
-    <!-- Your custom JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        jQuery(document).ready(function($) {
-            // Retrieve stored form data from sessionStorage
-            const formDataJson = sessionStorage.getItem('oidcFormData');
-            if (!formDataJson) {
-                console.error('Form data not found.');
-                alert('Form data not found. Please initiate the flow again from index.html.');
-                return;
-            }
-            const formData = JSON.parse(formDataJson);
+        // Function to extract query parameters from URL
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
 
-            // Token endpoint URL
-            const tokenEndpoint = `${formData.issuer_uri}/oauth2/v2.0/token`;
-
-            // Retrieve authorization code from URL
+        // On page load, check for authorization code in URL
+        document.addEventListener('DOMContentLoaded', function() {
             const authorizationCode = getParameterByName('code');
 
-            // Retrieve code verifier from sessionStorage
-            const codeVerifier = formData.code_verifier;
+            if (authorizationCode) {
+                const clientId = '9999efa7-f814-40df-85fc-b61011a764b9'; // Your client ID
+                const clientSecret = 'your_client_secret'; // Your client secret
+                const redirectUri = 'https://danfukuoka.github.io/success.html'; // Your redirect URI
+                const codeVerifier = 'hello-world'; // Your code verifier (if using PKCE)
 
-            // Token exchange data
-            const tokenExchangeData = {
-                grant_type: 'authorization_code',
-                client_id: formData.client_id,
-                code_verifier: codeVerifier,  // Use code_verifier in token exchange
-                code: authorizationCode,
-                redirect_uri: formData.redirect_uri
-            };
+                // Token endpoint URL using CORS Anywhere as proxy
+                const tokenEndpoint = `https://cors-anywhere.herokuapp.com/https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token`;
 
-            // Perform token exchange
-            $.ajax({
-                url: tokenEndpoint,
-                type: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                data: tokenExchangeData,
-                success: function(response) {
-                    console.log(response);
-                    // Display the tokens
-                    document.getElementById('tokenSection').style.display = 'block';
-                    document.getElementById('accessToken').textContent = response.access_token;
-                    document.getElementById('refreshToken').textContent = response.refresh_token;
-                    document.getElementById('expiresIn').textContent = response.expires_in;
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error exchanging authorization code:', error);
-                    alert('Error exchanging authorization code. Check console for details.');
-                }
-            });
+                // Token exchange data
+                const tokenExchangeData = {
+                    code: authorizationCode,
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    code_verifier: codeVerifier,
+                    redirect_uri: redirectUri,
+                    grant_type: 'authorization_code'
+                };
 
-            // Function to extract query parameters from URL
-            function getParameterByName(name, url) {
-                if (!url) url = window.location.href;
-                name = name.replace(/[\[\]]/g, '\\$&');
-                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                    results = regex.exec(url);
-                if (!results) return null;
-                if (!results[2]) return '';
-                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+                // Perform token exchange
+                axios.post(tokenEndpoint, tokenExchangeData)
+                    .then(response => {
+                        console.log(response.data);
+                        // Display or process tokens as needed
+                    })
+                    .catch(error => {
+                        console.error('Error exchanging authorization code:', error);
+                        alert('Error exchanging authorization code. Check console for details.');
+                    });
             }
         });
     </script>
