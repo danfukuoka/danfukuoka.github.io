@@ -16,9 +16,11 @@
         </div>
     </div>
 
+    <!-- Ensure jQuery is included before using $.ajax -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
     <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.5.4/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- Your custom JavaScript -->
@@ -40,7 +42,7 @@
         }
 
         // On page load, handle the authorization code exchange
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
             const authorizationCode = getParameterByName('code');
             const redirectUri = encodeURIComponent('http://localhost:8083'); // Replace with your actual redirect URI
 
