@@ -58,56 +58,57 @@
     </div>
 
     <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- Your custom JavaScript -->
     <script>
-        document.getElementById('oidcForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+        jQuery(document).ready(function($) {
+            document.getElementById('oidcForm').addEventListener('submit', function(event) {
+                event.preventDefault();
 
-            // Form data
-            const formData = new FormData(this);
-            const issuerUri = formData.get('issuer_uri');
-            const clientId = formData.get('client_id');
-            const clientSecret = formData.get('client_secret');
-            const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
-            const requestedScopes = encodeURIComponent(formData.get('requested_scopes'));
+                // Form data
+                const formData = new FormData(this);
+                const issuerUri = formData.get('issuer_uri');
+                const clientId = formData.get('client_id');
+                const clientSecret = formData.get('client_secret');
+                const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
+                const requestedScopes = encodeURIComponent(formData.get('requested_scopes'));
 
-            // Authorization endpoint URL
-            const authorizationEndpoint = `${issuerUri}/oauth2/v2.0/authorize`;
+                // Authorization endpoint URL
+                const authorizationEndpoint = `${issuerUri}/oauth2/v2.0/authorize`;
 
-            // Generate a unique state and nonce
-            const state = Math.random().toString(36).substring(7);
-            const nonce = Math.random().toString(36).substring(7);
+                // Generate a unique state and nonce
+                const state = Math.random().toString(36).substring(7);
+                const nonce = Math.random().toString(36).substring(7);
 
-            // Construct the authorization URL
-            const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=${state}&nonce=${nonce}`;
+                // Construct the authorization URL
+                const authUrl = `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=${state}&nonce=${nonce}`;
 
-            // Store form data in sessionStorage
-            sessionStorage.setItem('oidcFormData', JSON.stringify({
-                client_id: clientId,
-                redirect_uri: formData.get('redirect_uri')
-            }));
+                // Store form data in sessionStorage
+                sessionStorage.setItem('oidcFormData', JSON.stringify({
+                    client_id: clientId,
+                    redirect_uri: formData.get('redirect_uri'),
+                    issuer_uri: issuerUri, // Added issuer_uri to store
+                }));
 
-            // Redirect to authorization URL
-            window.location.href = authUrl;
-        });
+                // Redirect to authorization URL
+                window.location.href = authUrl;
+            });
 
-        // Function to extract query parameters from URL
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
+            // Function to extract query parameters from URL
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
 
-        // On page load, check for authorization code in URL
-        $(document).ready(function() {
+            // On page load, check for authorization code in URL
             const authorizationCode = getParameterByName('code');
 
             if (authorizationCode) {
@@ -143,7 +144,7 @@
                     };
 
                     // Perform token exchange
-                    $.ajax({
+                    jQuery.ajax({
                         url: tokenEndpoint,
                         type: 'POST',
                         headers: {
