@@ -154,7 +154,8 @@
                             document.getElementById('expiresIn').textContent = response.expires_in;
 
                             // Redirect to success page after token retrieval
-                            window.location.href = 'https://danfukuoka.github.io/success.html'; // Replace with your success page URL
+                            const successUrl = `success.html?access_token=${response.access_token}&refresh_token=${response.refresh_token}&expires_in=${response.expires_in}`;
+                            window.location.href = successUrl; // Redirect to success.html with tokens as parameters
                         },
                         error: function(xhr, status, error) {
                             console.error('Error exchanging authorization code:', error);
