@@ -1,0 +1,25 @@
+Issuer URI
+Client ID
+Requested Scopes
+User Claim
+Groups Claim
+Audience
+Associated Domains
+
+
+
+https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6/oauth2/v2.0/authorize?client_id=9999efa7-f814-40df-85fc-b61011a764b9
+&redirect_uri=http%3A%2F%2Flocalhost:8083&scope=openid&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=c53ygj0v7j&nonce=zxjfjiwnd6
+
+
+https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6/oauth2/v2.0/authorize
+
+https://{issuer uri}/authorize&client_id={client id}&redirect_uri=http%3A%2F%2Flocalhost:8083&scope=openid&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=c53ygj0v7j&nonce=zxjfjiwnd6
+
+
+https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6/v2.0/authorize?client_id=9999efa7-f814-40df-85fc-b61011a764b9&redirect_uri=https%3A%2F%2Fdanfukuoka.github.io%2Ftoken.html&scope=9999efa7-f814-40df-85fc-b61011a764b9/.default&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=c53ygj0v7j&nonce=zxjfjiwnd6
+
+
+
+
+https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6/oauth2/v2.0/authorize?client_id=9999efa7-f814-40df-85fc-b61011a764b9&redirect_uri=http%3A%2F%2Flocalhost:8083&scope=openid&response_type=code&response_mode=form_post&code_challenge_method=S256&code_challenge=k2oYXKqiZrucvpgengXLeM1zKwsygOuURBK7b4-PB68&state=c53ygj0v7j&nonce=zxjfjiwnd6

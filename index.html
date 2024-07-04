@@ -21,7 +21,7 @@
             </div>
             <div class="form-group">
                 <label for="redirect_uri">Redirect URI:</label>
-                <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="https://danfukuoka.github.io/success.html" required>
+                <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="https://danfukuoka.github.io" required>
                 <small class="form-text text-muted">Ensure this matches one of your authorized redirect URIs.</small>
             </div>
             <div class="form-group">
@@ -107,7 +107,7 @@
                     redirect_uri: redirectUri
                 };
 
-                // Perform token exchange
+                // Perform token exchange via AJAX
                 $.ajax({
                     url: tokenEndpoint,
                     type: 'POST',
