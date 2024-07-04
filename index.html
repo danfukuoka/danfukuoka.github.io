@@ -160,6 +160,14 @@
                 // Show the token exchange button
                 $('#exchangeTokenButton').show();
             }
+
+            // Check if issuerUri is present in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const receivedIssuerUri = urlParams.get('issuerUri');
+            if (receivedIssuerUri) {
+                // Store received issuerUri in sessionStorage
+                sessionStorage.setItem('issuerUri', decodeURIComponent(receivedIssuerUri));
+            }
         });
     </script>
 </body>
