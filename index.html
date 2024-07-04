@@ -20,6 +20,10 @@
                 <input type="text" class="form-control" id="client_id" name="client_id" value="9999efa7-f814-40df-85fc-b61011a764b9" required>
             </div>
             <div class="form-group">
+                <label for="client_secret">Client Secret:</label>
+                <input type="password" class="form-control" id="client_secret" name="client_secret" value="your_client_secret" required>
+            </div>
+            <div class="form-group">
                 <label for="redirect_uri">Redirect URI:</label>
                 <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="https://danfukuoka.github.io" required>
                 <small class="form-text text-muted">Ensure this matches one of your authorized redirect URIs.</small>
@@ -37,6 +41,20 @@
             <h3>Authorization Code Received:</h3>
             <p id="codeDisplay"></p>
         </div>
+
+        <!-- Exchange authorization code for tokens -->
+        <div id="tokenExchangeSection" class="mt-4" style="display: none;">
+            <h3>Exchange Authorization Code for Tokens</h3>
+            <button id="exchangeTokenButton" class="btn btn-success">Exchange the code to tokens</button>
+        </div>
+
+        <!-- Display tokens -->
+        <div id="tokenSection" class="mt-4" style="display: none;">
+            <h3>Tokens Received:</h3>
+            <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span></p>
+            <p id="refreshTokenDisplay"><strong>Refresh Token:</strong> <span id="refreshToken"></span></p>
+            <p id="expiresInDisplay"><strong>Expires In:</strong> <span id="expiresIn"></span></p>
+        </div>
     </div>
 
     <!-- Bootstrap JS and dependencies -->
@@ -53,6 +71,7 @@
             const formData = new FormData(this);
             const issuerUri = formData.get('issuer_uri');
             const clientId = formData.get('client_id');
+            const clientSecret = formData.get('client_secret');
             const redirectUri = encodeURIComponent(formData.get('redirect_uri'));
             const requestedScopes = encodeURIComponent(formData.get('requested_scopes'));
 
@@ -96,7 +115,55 @@
                 document.getElementById('authorizationCodeSection').style.display = 'block';
                 document.getElementById('codeDisplay').textContent = authorizationCode;
 
-                // Optional: Proceed to exchange authorization code for an access token here
+                // Display the token exchange section
+                document.getElementById('tokenExchangeSection').style.display = 'block';
+
+                // Exchange authorization code for tokens on button click
+                document.getElementById('exchangeTokenButton').addEventListener('click', function() {
+                    // Retrieve stored form data
+                    const formDataJson = sessionStorage.getItem('oidcFormData');
+                    if (!formDataJson) {
+                        console.error('Form data not found.');
+                        alert('Form data not found. Please initiate the flow again from index.html.');
+                        return;
+                    }
+                    const formData = JSON.parse(formDataJson);
+
+                    // Token endpoint URL
+                    const tokenEndpoint = `${formData.issuer_uri}/oauth2/v2.0/token`;
+
+                    // Token exchange data
+                    const tokenExchangeData = {
+                        grant_type: 'authorization_code',
+                        client_id: formData.client_id,
+                        client_secret: formData.client_secret,
+                        code_verifier: 'helloworld', // Replace with actual code verifier logic if needed
+                        code: authorizationCode,
+                        redirect_uri: formData.redirect_uri
+                    };
+
+                    // Perform token exchange
+                    $.ajax({
+                        url: tokenEndpoint,
+                        type: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: tokenExchangeData,
+                        success: function(response) {
+                            console.log(response);
+                            // Display the tokens
+                            document.getElementById('tokenSection').style.display = 'block';
+                            document.getElementById('accessToken').textContent = response.access_token;
+                            document.getElementById('refreshToken').textContent = response.refresh_token;
+                            document.getElementById('expiresIn').textContent = response.expires_in;
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error exchanging authorization code:', error);
+                            alert('Error exchanging authorization code. Check console for details.');
+                        }
+                    });
+                });
             }
         });
     </script>
