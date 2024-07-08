@@ -9,91 +9,87 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">OIDC Flow Diagnostic Tool 3</h1>
+        <h1 class="mb-4">OIDC Flow Diagnostic Tool</h1>
         <form id="oidcForm">
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label for="issuer_uri" class="col-form-label">Issuer URI:</label>
-                </div>
-                <div class="col-auto">
+            <!-- Issuer URI -->
+            <div class="form-group row">
+                <label for="issuer_uri" class="col-sm-2 col-form-label">Issuer URI:</label>
+                <div class="col-sm-10">
                     <input type="url" class="form-control" id="issuer_uri" name="issuer_uri" value="https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6" required>
                 </div>
             </div>
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label for="client_id" class="col-form-label">Client ID:</label>
-                </div>
-                <div class="col-auto">
+
+            <!-- Client ID -->
+            <div class="form-group row">
+                <label for="client_id" class="col-sm-2 col-form-label">Client ID:</label>
+                <div class="col-sm-10">
                     <input type="text" class="form-control" id="client_id" name="client_id" value="9999efa7-f814-40df-85fc-b61011a764b9" required>
                 </div>
             </div>
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label for="requested_scopes" class="col-form-label">Requested Scopes:</label>
-                </div>
-                <div class="col-auto">
+
+            <!-- Requested Scopes -->
+            <div class="form-group row">
+                <label for="requested_scopes" class="col-sm-2 col-form-label">Requested Scopes:</label>
+                <div class="col-sm-10">
                     <input type="text" class="form-control" id="requested_scopes" name="requested_scopes" value="openid" required>
-                </div>
-                <div class="col-auto">
-                    <span class="form-text text-muted">
-                        Separate multiple scopes with spaces or commas.
-                    </span>
+                    <small class="form-text text-muted">Separate multiple scopes with spaces or commas.</small>
                 </div>
             </div>
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label for="user_claim" class="col-form-label">User Claim:</label>
-                </div>
-                <div class="col-auto">
+
+            <!-- User Claim -->
+            <div class="form-group row">
+                <label for="user_claim" class="col-sm-2 col-form-label">User Claim:</label>
+                <div class="col-sm-10">
                     <input type="text" class="form-control" id="user_claim" name="user_claim">
                 </div>
             </div>
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label for="groups_claim" class="col-form-label">Groups Claim:</label>
-                </div>
-                <div class="col-auto">
+
+            <!-- Groups Claim -->
+            <div class="form-group row">
+                <label for="groups_claim" class="col-sm-2 col-form-label">Groups Claim:</label>
+                <div class="col-sm-10">
                     <input type="text" class="form-control" id="groups_claim" name="groups_claim">
                 </div>
             </div>
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
-                    <label for="audience" class="col-form-label">Audience:</label>
-                </div>
-                <div class="col-auto">
+
+            <!-- Audience -->
+            <div class="form-group row">
+                <label for="audience" class="col-sm-2 col-form-label">Audience:</label>
+                <div class="col-sm-10">
                     <input type="text" class="form-control" id="audience" name="audience">
                 </div>
             </div>
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
+
+            <!-- Redirect URI -->
+            <div class="form-group row">
+                <label for="redirect_uri" class="col-sm-2 col-form-label">Redirect URI:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="https://danfukuoka.github.io" required>
+                    <small class="form-text text-muted">Ensure this matches one of your authorized redirect URIs.</small>
+                </div>
+            </div>
+
+            <!-- Optional Fields Toggle Button -->
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
                     <button type="button" id="toggleOptionsButton" class="btn btn-link">Show Other Options</button>
                 </div>
             </div>
+
+            <!-- Optional Fields (initially hidden) -->
             <div id="optionalFields" style="display: none;">
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
-                        <label for="redirect_uri" class="col-form-label">Redirect URI:</label>
-                    </div>
-                    <div class="col-auto">
-                        <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="https://danfukuoka.github.io" required>
-                    </div>
-                    <div class="col-auto">
-                        <span class="form-text text-muted">
-                            Ensure this matches one of your authorized redirect URIs.
-                        </span>
-                    </div>
-                </div>
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
-                        <label for="code_verifier" class="col-form-label">Code Verifier:</label>
-                    </div>
-                    <div class="col-auto">
+                <!-- Code Verifier -->
+                <div class="form-group row">
+                    <label for="code_verifier" class="col-sm-2 col-form-label">Code Verifier:</label>
+                    <div class="col-sm-10">
                         <input type="text" class="form-control" id="code_verifier" name="code_verifier" value="hello-world" required>
                     </div>
                 </div>
             </div>
-            <div class="row g-3 align-items-center">
-                <div class="col-auto">
+
+            <!-- Authorize Button -->
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
                     <button type="button" id="authorizeButton" class="btn btn-primary">Authorize</button>
                 </div>
             </div>
