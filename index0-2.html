@@ -34,7 +34,7 @@
             <div class="form-group row">
                 <label for="issuer_uri" class="col-sm-2 col-form-label">Issuer URI:</label>
                 <div class="col-sm-10">
-                    <input type="url" class="form-control" id="issuer_uri" name="issuer_uri" value="https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6/v2.0" required>
+                    <input type="url" class="form-control" id="issuer_uri" name="issuer_uri" value="https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6" required>
                 </div>
             </div>
 
@@ -116,8 +116,6 @@
     <!-- Your custom JavaScript -->
     <script>
         $(document).ready(function() {
-            let authorizationEndpoint, tokenEndpoint;
-
             // Function to toggle optional fields visibility
             $('#toggleOptionsButton').click(function() {
                 $('#optionalFields').toggle();
@@ -125,25 +123,26 @@
                 $(this).text(isVisible ? 'Hide Other Options' : 'Show Other Options');
             });
 
-            // Function to fetch OIDC configuration
-            function fetchOidcConfiguration(issuerUri, callback) {
-                const wellKnownUrl = issuerUri + `/.well-known/openid-configuration`;
-
-                $.getJSON(wellKnownUrl, function(data) {
-                    authorizationEndpoint = data.authorization_endpoint;
-                    tokenEndpoint = data.token_endpoint;
-                    callback();
-                }).fail(function() {
-                    console.error('Failed to fetch OIDC configuration');
-                    alert('Failed to fetch OIDC configuration. Check console for details.');
-                });
-            }
+            $('#loadKeysButton').click(function() {
+                // Example of loading keys from input fields
+                const apiPublicKey = $('#api_public_key').val();
+                const apiPrivateKey = $('#api_private_key').val();
+                
+                // Use these values as needed, e.g., for API requests
+                console.log('API Key Public Key:', apiPublicKey);
+                console.log('API Key Private Key:', apiPrivateKey);
+                
+                // Optionally, perform actions with these keys
+                alert('Keys loaded successfully!');
+            });
 
             $('#authorizeButton').click(function() {
                 const issuerUri = $('#issuer_uri').val();
                 const clientId = $('#client_id').val();
                 const requestedScopes = encodeURIComponent($('#requested_scopes').val());
-                const redirectUri = $('#redirect_uri').val();
+                const userClaim = $('#user_claim').val();
+                const groupsClaim = $('#groups_claim').val();
+                const audience = $('#audience').val();
                 const codeVerifier = $('#code_verifier').val();
 
                 // Generate a unique state and nonce
@@ -153,16 +152,20 @@
                 // Generate code challenge from code verifier
                 const codeChallenge = base64URL(CryptoJS.SHA256(codeVerifier));
 
-                fetchOidcConfiguration(issuerUri, function() {
-                    // Construct the authorization URL with state, nonce, and issuerUri as query parameters
-                    const authUrl = `${authorizationEndpoint}?client_id=${clientId}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}&redirect_uri=${redirectUri}`;
+                // Generate Well-Known URL
+                const wellKnownUrl = issuerUri + `/.well-known/openid-configuration`
 
-                    // Store issuerUri in sessionStorage for retrieval after redirect
-                    sessionStorage.setItem('issuerUri', issuerUri);
+                // Authorization endpoint URL
+                const authorizationEndpoint = `${issuerUri}/oauth2/v2.0/authorize`;
 
-                    // Redirect to authorization URL
-                    window.location.href = authUrl;
-                });
+                // Construct the authorization URL with state, nonce, and issuerUri as query parameters
+                const authUrl = `${authorizationEndpoint}?client_id=${clientId}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}`;
+
+                // Store issuerUri in sessionStorage for retrieval after redirect
+                sessionStorage.setItem('issuerUri', issuerUri);
+
+                // Redirect to authorization URL
+                window.location.href = authUrl;
             });
 
             $('#exchangeTokenButton').click(function() {
@@ -175,40 +178,41 @@
                 // Retrieve issuerUri from sessionStorage
                 const issuerUri = sessionStorage.getItem('issuerUri');
 
-                fetchOidcConfiguration(issuerUri, function() {
-                    // Token exchange data
-                    const tokenExchangeData = {
-                        grant_type: 'authorization_code',
-                        client_id: clientId,
-                        client_secret: clientSecret,
-                        code_verifier: codeVerifier,
-                        code: authorizationCode,
-                        redirect_uri: redirectUri
-                    };
+                // Token endpoint URL
+                const tokenEndpoint = `${issuerUri}/oauth2/v2.0/token`;
 
-                    // Perform token exchange via AJAX
-                    $.ajax({
-                        url: tokenEndpoint,
-                        type: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        data: $.param(tokenExchangeData), // Ensure data is URL-encoded
-                        success: function(response) {
-                            console.log(response);
-                            // Display the tokens
-                            $('#tokenSection').show();
-                            $('#accessToken').text(response.access_token);
-                            $('#idToken').text(response.id_token);
-                            // Set JWT.io links
-                            $('#accessTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.access_token}`);
-                            $('#idTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.id_token}`);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error exchanging authorization code:', error);
-                            alert('Error exchanging authorization code. Check console for details.');
-                        }
-                    });
+                // Token exchange data
+                const tokenExchangeData = {
+                    grant_type: 'authorization_code',
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    code_verifier: codeVerifier,
+                    code: authorizationCode,
+                    redirect_uri: redirectUri
+                };
+
+                // Perform token exchange via AJAX
+                $.ajax({
+                    url: tokenEndpoint,
+                    type: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: $.param(tokenExchangeData), // Ensure data is URL-encoded
+                    success: function(response) {
+                        console.log(response);
+                        // Display the tokens
+                        $('#tokenSection').show();
+                        $('#accessToken').text(response.access_token);
+                        $('#idToken').text(response.id_token);
+                        // Set JWT.io links
+                        $('#accessTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.access_token}`);
+                        $('#idTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.id_token}`);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error exchanging authorization code:', error);
+                        alert('Error exchanging authorization code. Check console for details.');
+                    }
                 });
             });
 
