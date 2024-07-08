@@ -46,9 +46,8 @@
         <!-- Display tokens -->
         <div id="tokenSection" class="mt-4" style="display: none;">
             <h3>Tokens Received:</h3>
-            <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span></p>
-            <p id="idTokenDisplay"><strong>ID Token:</strong> <span id="idToken"></span></p>
-            <p id="expiresInDisplay"><strong>Expires In:</strong> <span id="expiresIn"></span></p>
+            <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span> <a id="accessTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
+            <p id="idTokenDisplay"><strong>ID Token:</strong> <span id="idToken"></span> <a id="idTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
         </div>
     </div>
 
@@ -127,7 +126,9 @@
                         $('#tokenSection').show();
                         $('#accessToken').text(response.access_token);
                         $('#idToken').text(response.id_token);
-                        $('#expiresIn').text(response.expires_in);
+                        // Set JWT.io links
+                        $('#accessTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.access_token}`);
+                        $('#idTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.id_token}`);
                     },
                     error: function(xhr, status, error) {
                         console.error('Error exchanging authorization code:', error);
