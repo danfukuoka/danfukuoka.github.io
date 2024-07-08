@@ -6,6 +6,16 @@
     <title>OIDC Flow Diagnostic Tool</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS */
+        .no-padding {
+            padding-left: 0;
+        }
+        .tokens-container, .authorization-code-container {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -70,9 +80,9 @@
             </div>
 
             <!-- Optional Fields Toggle Button -->
-            <div class="form-group row">
+            <div class="form-group row no-padding">
                 <div class="offset-sm-2 col-sm-10">
-                    <button type="button" id="toggleOptionsButton" class="btn btn-link">Show Other Options</button>
+                    <button type="button" id="toggleOptionsButton" class="btn btn-link p-0">Show Other Options</button>
                 </div>
             </div>
 
@@ -96,14 +106,14 @@
         </form>
 
         <!-- Display authorization code -->
-        <div id="authorizationCodeSection" class="mt-4" style="display: none;">
+        <div id="authorizationCodeSection" class="mt-4 authorization-code-container" style="display: none;">
             <h3>Authorization Code Received:</h3>
             <p id="authorizationCodeDisplay"></p>
             <button id="exchangeTokenButton" class="btn btn-success">Exchange Code for Tokens</button>
         </div>
 
         <!-- Display tokens -->
-        <div id="tokenSection" class="mt-4" style="display: none;">
+        <div id="tokenSection" class="mt-4 tokens-container" style="display: none;">
             <h3>Tokens Received:</h3>
             <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span> <a id="accessTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
             <p id="idTokenDisplay"><strong>ID Token:</strong> <span id="idToken"></span> <a id="idTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
