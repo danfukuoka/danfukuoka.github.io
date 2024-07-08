@@ -15,6 +15,9 @@
             max-width: 100%;
             word-wrap: break-word; /* Wrap long words */
         }
+        .code-text {
+            font-size: 0.9rem; /* Adjust the font size as needed */
+        }
     </style>
 </head>
 <body>
@@ -108,15 +111,15 @@
         <!-- Display authorization code -->
         <div id="authorizationCodeSection" class="mt-4 authorization-code-container" style="display: none;">
             <h3>Authorization Code Received:</h3>
-            <p id="authorizationCodeDisplay"></p>
+            <p id="authorizationCodeDisplay" class="code-text"></p>
             <button id="exchangeTokenButton" class="btn btn-success">Exchange Code for Tokens</button>
         </div>
 
         <!-- Display tokens -->
         <div id="tokenSection" class="mt-4 tokens-container" style="display: none;">
             <h3>Tokens Received:</h3>
-            <p id="accessTokenDisplay"><strong>Access Token:</strong> <span id="accessToken"></span> <a id="accessTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
-            <p id="idTokenDisplay"><strong>ID Token:</strong> <span id="idToken"></span> <a id="idTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
+            <p id="accessTokenDisplay" class="code-text"><strong>Access Token:</strong> <span id="accessToken"></span> <a id="accessTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
+            <p id="idTokenDisplay" class="code-text"><strong>ID Token:</strong> <span id="idToken"></span> <a id="idTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
         </div>
     </div>
 
