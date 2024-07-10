@@ -24,71 +24,16 @@
             margin-bottom: 20px;
             padding-top: 20px;
         }
+        #authorizationCodeSection {
+            margin-bottom: 24px;
+        }
     </style>
 </head>
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">OIDC Flow Diagnostic Tool</h1>
 
-            <!-- Issuer URI -->
-            <div class="form-group row">
-                <label for="issuer_uri" class="col-sm-2 col-form-label">Issuer URI:</label>
-                <div class="col-sm-10">
-                    <input type="url" class="form-control" id="issuer_uri" name="issuer_uri" value="https://login.microsoftonline.com/8cc39dcf-57e4-4485-8385-99fc69a90cc6/v2.0" required>
-                </div>
-            </div>
-
-            <!-- Client ID -->
-            <div class="form-group row">
-                <label for="client_id" class="col-sm-2 col-form-label">Client ID:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="client_id" name="client_id" value="9999efa7-f814-40df-85fc-b61011a764b9" required>
-                </div>
-            </div>
-
-            <!-- Requested Scopes -->
-            <div class="form-group row">
-                <label for="requested_scopes" class="col-sm-2 col-form-label">Requested Scopes:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="requested_scopes" name="requested_scopes" value="openid" required>
-                    <!--  <small class="form-text text-muted">Separate multiple scopes with spaces or commas.</small> -->
-                </div>
-            </div>
-
-            <!-- Redirect URI -->
-            <div class="form-group row">
-                <label for="redirect_uri" class="col-sm-2 col-form-label">Redirect URI:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="redirect_uri" name="redirect_uri" value="https://danfukuoka.github.io" required>
-                    <small class="form-text text-muted">Ensure this matches one of your authorized redirect URIs.</small>
-                </div>
-            </div>
-
-            <!-- Optional Fields Toggle Button -->
-            <div class="form-group row no-padding">
-                <div class="offset-sm-2 col-sm-10">
-                    <button type="button" id="toggleOptionsButton" class="btn btn-link p-0">Show Other Options</button>
-                </div>
-            </div>
-
-            <!-- Optional Fields (initially hidden) -->
-            <div id="optionalFields" style="display: none;">
-                <!-- Code Verifier -->
-                <div class="form-group row">
-                    <label for="code_verifier" class="col-sm-2 col-form-label">Code Verifier:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="code_verifier" name="code_verifier" value="hello-world" required>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Authorize Button -->
-            <div class="form-group row">
-                <div class="col-sm-10">
-                    <button type="button" id="authorizeButton" class="btn btn-primary">Authorize</button>
-                </div>
-            </div>
-        </form>
+        <!-- Form omitted for brevity, see your existing form -->
 
         <!-- Display authorization code -->
         <div id="authorizationCodeSection" class="mt-4 authorization-code-container" style="display: none;">
@@ -117,6 +62,7 @@
     <script>
         $(document).ready(function() {
             let authorizationEndpoint, tokenEndpoint;
+            let codeChallenge; // Declare codeChallenge globally
 
             // Function to toggle optional fields visibility
             $('#toggleOptionsButton').click(function() {
@@ -151,14 +97,15 @@
                 const nonce = Math.random().toString(36).substring(7);
 
                 // Generate code challenge from code verifier
-                const codeChallenge = base64URL(CryptoJS.SHA256(codeVerifier));
+                codeChallenge = base64URL(CryptoJS.SHA256(codeVerifier));
 
                 fetchOidcConfiguration(issuerUri, function() {
                     // Construct the authorization URL with state, nonce, and issuerUri as query parameters
                     const authUrl = `${authorizationEndpoint}?client_id=${clientId}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}&redirect_uri=${redirectUri}`;
 
-                    // Store issuerUri in sessionStorage for retrieval after redirect
+                    // Store issuerUri and codeChallenge in sessionStorage for retrieval after redirect
                     sessionStorage.setItem('issuerUri', issuerUri);
+                    sessionStorage.setItem('codeChallenge', codeChallenge);
 
                     // Redirect to authorization URL
                     window.location.href = authUrl;
@@ -170,10 +117,10 @@
                 const clientId = $('#client_id').val();
                 const clientSecret = $('#client_secret').val(); // Optional
                 const redirectUri = $('#redirect_uri').val();
-                const codeVerifier = $('#code_verifier').val();
 
-                // Retrieve issuerUri from sessionStorage
+                // Retrieve issuerUri and codeChallenge from sessionStorage
                 const issuerUri = sessionStorage.getItem('issuerUri');
+                const storedCodeChallenge = sessionStorage.getItem('codeChallenge');
 
                 fetchOidcConfiguration(issuerUri, function() {
                     // Token exchange data
@@ -181,7 +128,7 @@
                         grant_type: 'authorization_code',
                         client_id: clientId,
                         client_secret: clientSecret,
-                        code_verifier: codeVerifier,
+                        code_verifier: storedCodeChallenge, // Use storedCodeChallenge instead of codeVerifier
                         code: authorizationCode,
                         redirect_uri: redirectUri
                     };
@@ -237,11 +184,13 @@
                 $('#exchangeTokenButton').show();
             }
 
-            // Check if issuerUri is present in URL
+            // Check if issuerUri and codeChallenge are present in sessionStorage
             const receivedIssuerUri = sessionStorage.getItem('issuerUri');
-            if (receivedIssuerUri) {
-                // Store received issuerUri in sessionStorage
+            const receivedCodeChallenge = sessionStorage.getItem('codeChallenge');
+            if (receivedIssuerUri && receivedCodeChallenge) {
+                // Store received issuerUri and codeChallenge in sessionStorage
                 sessionStorage.setItem('issuerUri', decodeURIComponent(receivedIssuerUri));
+                sessionStorage.setItem('codeChallenge', receivedCodeChallenge);
             }
         });
     </script>
