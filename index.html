@@ -239,13 +239,6 @@
                 // Show the token exchange button
                 $('#exchangeTokenButton').show();
             }
-
-            // Check if issuerUri is present in URL
-            const receivedIssuerUri = sessionStorage.getItem('issuerUri');
-            if (receivedIssuerUri) {
-                // Store received issuerUri in sessionStorage
-                sessionStorage.setItem('issuerUri', decodeURIComponent(receivedIssuerUri));
-            }
         });
     </script>
 </body>
