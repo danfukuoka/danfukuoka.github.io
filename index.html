@@ -143,7 +143,7 @@
             }
 
             $('#authorizeButton').click(function() {
-                const issuerUri = $('#issuer_uri').val();
+                const issuerUri =$('#issuer_uri').val() ;
                 const clientId = $('#client_id').val();
                 const requestedScopes = encodeURIComponent($('#requested_scopes').val());
                 const redirectUri = $('#redirect_uri').val();
@@ -160,8 +160,12 @@
                     // Construct the authorization URL with state, nonce, and issuerUri as query parameters
                     const authUrl = `${authorizationEndpoint}?client_id=${clientId}&scope=${requestedScopes}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}&redirect_uri=${redirectUri}`;
 
-                    // Store issuerUri in sessionStorage for retrieval after redirect
+                    // Store data for retrieval after redirect
                     sessionStorage.setItem('issuerUri', issuerUri);
+                    sessionStorage.setItem('clientId', clientId);
+                    sessionStorage.setItem('requestedScopes', requestedScopes);
+                    sessionStorage.setItem('redirectUri', redirectUri);
+                    sessionStorage.setItem('codeVerifier', codeVerifier);
 
                     // Redirect to authorization URL
                     window.location.href = authUrl;
@@ -170,13 +174,14 @@
 
             $('#exchangeTokenButton').click(function() {
                 const authorizationCode = $('#authorizationCodeDisplay').text();
-                const clientId = $('#client_id').val();
-                const clientSecret = $('#client_secret').val(); // Optional
-                const redirectUri = $('#redirect_uri').val();
-                const codeVerifier = $('#code_verifier').val();
 
-                // Retrieve issuerUri from sessionStorage
+                // Retrieve data from sessionStorage
                 const issuerUri = sessionStorage.getItem('issuerUri');
+                const clientId = sessionStorage.getItem('clientId');
+                const requestedScopes = sessionStorage.getItem('requestedScopes');
+                const redirectUri = sessionStorage.getItem('redirectUri');
+                const codeVerifier = sessionStorage.getItem('codeVerifier');
+
 
                 fetchOidcConfiguration(issuerUri, function() {
                     // Token exchange data
@@ -239,6 +244,13 @@
                 // Show the token exchange button
                 $('#exchangeTokenButton').show();
             }
+
+            $('#issuer_uri').val(issuerUri ? issuerUri : "");
+            $('#client_id').val(clientId ? clientId : "");
+            $('#requested_scopes').val(requestedScopes ? requestedScopes : "");
+            $('#redirect_uri').val(redirectUri ? redirectUri : "");
+            $('#code_verifier').val(codeVerifier ? codeVerifier : "");
+            
         });
     </script>
 </body>
