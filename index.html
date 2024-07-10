@@ -127,13 +127,6 @@
             const redirectUri = sessionStorage.getItem('redirectUri');
             const codeVerifier = sessionStorage.getItem('codeVerifier');
 
-
-            $('#issuer_uri').val(issuerUri ? issuerUri : "");
-            $('#client_id').val(clientId ? clientId : "");
-            $('#requested_scopes').val(requestedScopes ? requestedScopes : "");
-            $('#redirect_uri').val(redirectUri ? redirectUri : "");
-            $('#code_verifier').val(codeVerifier ? codeVerifier : "");
-
             let authorizationEndpoint, tokenEndpoint;
 
             // Function to toggle optional fields visibility
@@ -249,6 +242,13 @@
 
                 // Show the token exchange button
                 $('#exchangeTokenButton').show();
+
+                // Fill the form with the stored data    
+                $('#issuer_uri').val(issuerUri ? issuerUri : "");
+                $('#client_id').val(clientId ? clientId : "");
+                $('#requested_scopes').val(requestedScopes ? requestedScopes : "");
+                $('#redirect_uri').val(redirectUri ? redirectUri : "");
+                $('#code_verifier').val(codeVerifier ? codeVerifier : "");
             }
             
         });
