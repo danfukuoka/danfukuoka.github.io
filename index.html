@@ -119,6 +119,21 @@
     <!-- Your custom JavaScript -->
     <script>
         $(document).ready(function() {
+
+            // Retrieve data from sessionStorage
+            const issuerUri = sessionStorage.getItem('issuerUri');
+            const clientId = sessionStorage.getItem('clientId');
+            const requestedScopes = sessionStorage.getItem('requestedScopes');
+            const redirectUri = sessionStorage.getItem('redirectUri');
+            const codeVerifier = sessionStorage.getItem('codeVerifier');
+
+
+            $('#issuer_uri').val(issuerUri ? issuerUri : "");
+            $('#client_id').val(clientId ? clientId : "");
+            $('#requested_scopes').val(requestedScopes ? requestedScopes : "");
+            $('#redirect_uri').val(redirectUri ? redirectUri : "");
+            $('#code_verifier').val(codeVerifier ? codeVerifier : "");
+
             let authorizationEndpoint, tokenEndpoint;
 
             // Function to toggle optional fields visibility
@@ -174,14 +189,6 @@
 
             $('#exchangeTokenButton').click(function() {
                 const authorizationCode = $('#authorizationCodeDisplay').text();
-
-                // Retrieve data from sessionStorage
-                const issuerUri = sessionStorage.getItem('issuerUri');
-                const clientId = sessionStorage.getItem('clientId');
-                const requestedScopes = sessionStorage.getItem('requestedScopes');
-                const redirectUri = sessionStorage.getItem('redirectUri');
-                const codeVerifier = sessionStorage.getItem('codeVerifier');
-
 
                 fetchOidcConfiguration(issuerUri, function() {
                     // Token exchange data
@@ -244,12 +251,6 @@
                 // Show the token exchange button
                 $('#exchangeTokenButton').show();
             }
-
-            $('#issuer_uri').val(issuerUri ? issuerUri : "");
-            $('#client_id').val(clientId ? clientId : "");
-            $('#requested_scopes').val(requestedScopes ? requestedScopes : "");
-            $('#redirect_uri').val(redirectUri ? redirectUri : "");
-            $('#code_verifier').val(codeVerifier ? codeVerifier : "");
             
         });
     </script>
