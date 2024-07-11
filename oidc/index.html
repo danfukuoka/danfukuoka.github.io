@@ -30,6 +30,9 @@
         .bg-purple {
             background-color: #6f42c1;
         }
+        .bg-body {
+            background-color: #edededfa;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -39,7 +42,7 @@
             <h1 class="h6 mb-0 text-white lh-1">OpenID Connect Debugger</h1>
         </div>
 
-        <div class="bg-white rounded shadow-sm p-3 mb-2">
+        <div class="bg-white rounded shadow-sm p-3">
 
             <!-- Issuer URI -->
             <div class="form-group row">
@@ -103,7 +106,7 @@
 
 
         <!-- Display authorization code -->
-        <div id="authorizationCodeSection" class="mt-4 authorization-code-container bg-white rounded shadow-sm p-2 mb-2" style="display: none;">
+        <div id="authorizationCodeSection" class="mt-2 authorization-code-container bg-white rounded shadow-sm p-3 mb-2" style="display: none;">
             <h3>Authorization Code Received:</h3>
             <p id="authorizationCodeDisplay" class="code-text"></p>
             <div class="text-right"> <!-- Align to right -->
@@ -113,7 +116,7 @@
 
 
         <!-- Display tokens -->
-        <div id="tokenSection" class="mt-4 tokens-container bg-white rounded shadow-sm p-2 mb-2" style="display: none;">
+        <div id="tokenSection" class="mt-2 tokens-container bg-white rounded shadow-sm p-3 mb-2" style="display: none;">
             <h3>Tokens Received:</h3>
             <p id="accessTokenDisplay" class="code-text"><strong>Access Token:</strong> <span id="accessToken"></span> <a id="accessTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
             <p id="idTokenDisplay" class="code-text"><strong>ID Token:</strong> <span id="idToken"></span> <a id="idTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
