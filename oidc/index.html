@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OIDC Flow Diagnostic Tool</title>
+    <title>OpenID Connect Debugger</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -35,11 +35,11 @@
 <body class="bg-light">
     <div class="container mt-5">
 
-        <div class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm">
-            <h1 class="h6 mb-0 text-white lh-1">OIDC Debugger</h1>
+        <div class="d-flex align-items-center p-2 my-3 text-white bg-purple rounded shadow-sm mb-12">
+            <h1 class="h6 mb-0 text-white lh-1">OpenID Connect Debugger</h1>
         </div>
 
-        <div class="bg-white rounded shadow-sm p-3">
+        <div class="bg-white rounded shadow-sm p-3 ">
 
             <!-- Issuer URI -->
             <div class="form-group row">
@@ -104,7 +104,7 @@
 
         <!-- Display authorization code -->
 
-        <div class="bg-white rounded shadow-sm p-3">
+        <div class="bg-white rounded shadow-sm p-2 mb-12">
             <div id="authorizationCodeSection" class="mt-4 authorization-code-container" style="display: none;">
                 <h3>Authorization Code Received:</h3>
                 <p id="authorizationCodeDisplay" class="code-text"></p>
@@ -115,7 +115,7 @@
         </div>
 
         <!-- Display tokens -->
-        <div class="bg-white rounded shadow-sm p-3">
+        <div class="bg-white rounded shadow-sm p-2 mb-12">
             <div id="tokenSection" class="mt-4 tokens-container" style="display: none;">
                 <h3>Tokens Received:</h3>
                 <p id="accessTokenDisplay" class="code-text"><strong>Access Token:</strong> <span id="accessToken"></span> <a id="accessTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
