@@ -24,12 +24,6 @@
             margin-bottom: 20px;
             padding-top: 20px;
         }
-        .bg-purple {
-            background-color: #6f42c1;
-        }
-        .bg-body {
-            background-color: #edededfa;
-        }
         #authorizationCodeSection {
             margin-bottom: 24px;
         }
@@ -38,17 +32,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        #tokenSection {
-            max-width: 100%; /* Ensures the container does not overflow horizontally */
-        }
-        .token-info {
-                display: flex;
-        justify-content: space-between;
-        align-items: center;
-        }
-        .code-text {
-            margin-bottom: 0; /* Remove bottom margin from paragraphs */
-        }
+
     </style>
 </head>
 <body class="bg-light">
@@ -133,20 +117,15 @@
         </div>
 
 
+        <!-- Display tokens -->
         <div id="tokenSection" class="mt-2 tokens-container bg-white rounded shadow-sm p-3 mb-2" style="display: none;">
-            <h5 class="border-bottom border-gray">Tokens Received</h5>
-            <div class="token-info">
-                <p id="accessTokenDisplay" class="code-text">
-                    <strong>Access Token:</strong>
-                    <span id="accessToken"></span>
-                    <a id="accessTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a>
-                </p>
-                <p id="idTokenDisplay" class="code-text">
-                    <strong>ID Token:</strong>
-                    <span id="idToken"></span>
-                    <a id="idTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a>
-                </p>
-            </div>
+            <h5 class="border-bottom border-gray">Tokens Received</h3>
+            <p id="accessTokenDisplay" class="code-text">
+                <strong>Access Token:</strong>
+                <span id="accessToken"></span>
+                <a id="accessTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a>
+              </p>
+            <p id="idTokenDisplay" class="code-text"><strong>ID Token:</strong> <span id="idToken"></span> <a id="idTokenJwtLink" href="#" target="_blank">(View in JWT.io)</a></p>
         </div>
 
     </div>
