@@ -169,7 +169,7 @@
             $('#authorizeButton').click(function() {
                 const issuerUri =$('#issuer_uri').val() ;
                 const clientId = $('#client_id').val();
-                const requestedScopes = $('#requested_scopes').val();
+                const requestedScopes = $('#requested_scopes').val().replace(/,/g, '');;
                 const redirectUri = $('#redirect_uri').val();
                 const codeVerifier = $('#code_verifier').val();
 
