@@ -169,7 +169,7 @@
             $('#authorizeButton').click(function() {
                 const issuerUri =$('#issuer_uri').val() ;
                 const clientId = $('#client_id').val();
-                const requestedScopes = $('#requested_scopes').val().replace(/,/g, '');;
+                const requestedScopes = $('#requested_scopes').val();
                 const redirectUri = $('#redirect_uri').val();
                 const codeVerifier = $('#code_verifier').val();
 
@@ -182,7 +182,7 @@
 
                 fetchOidcConfiguration(issuerUri, function() {
                     // Construct the authorization URL with state, nonce, and issuerUri as query parameters
-                    const authUrl = `${authorizationEndpoint}?client_id=${clientId}&scope=${encodeURIComponent(requestedScopes)}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}&redirect_uri=${redirectUri}`;
+                    const authUrl = `${authorizationEndpoint}?client_id=${clientId}&scope=${encodeURIComponent(requestedScopes.replace(/,/g, ''))}&response_type=code&response_mode=query&code_challenge_method=S256&code_challenge=${codeChallenge}&state=${state}&nonce=${nonce}&redirect_uri=${redirectUri}`;
 
                     // Store data for retrieval after redirect
                     sessionStorage.setItem('issuerUri', issuerUri);
