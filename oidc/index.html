@@ -230,8 +230,18 @@
                             $('#accessToken').text(response.access_token);
                             $('#idToken').text(response.id_token);
                             // Set JWT.io links
-                            $('#accessTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.access_token}`);
-                            $('#idTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.id_token}`);
+                            if (response.access_token) {
+                                $('#accessToken').text(response.access_token);
+                                $('#accessTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.access_token}`).show();
+                            } else {
+                                $('#accessTokenJwtLink').hide();
+                            }
+                            if (response.id_token) {
+                                $('#idToken').text(response.id_token);
+                                $('#idTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.id_token}`).show();
+                            } else {
+                                $('#idTokenJwtLink').hide();
+                            }
                         },
                         error: function(xhr, status, error) {
                             console.error('Error exchanging authorization code:', error);
