@@ -234,12 +234,14 @@
                                 $('#accessToken').text(response.access_token);
                                 $('#accessTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.access_token}`).show();
                             } else {
+                                $('#accessToken').text('-');
                                 $('#accessTokenJwtLink').hide();
                             }
                             if (response.id_token) {
                                 $('#idToken').text(response.id_token);
                                 $('#idTokenJwtLink').attr('href', `https://jwt.io/#debugger-io?token=${response.id_token}`).show();
                             } else {
+                                $('#idToken').text('-');
                                 $('#idTokenJwtLink').hide();
                             }
                         },
