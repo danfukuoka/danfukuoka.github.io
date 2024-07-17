@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenID Connect Debugger</title>
+    <title>OpenID Connect Debugger - version 1.0</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -173,6 +173,11 @@
                 const redirectUri = $('#redirect_uri').val();
                 const codeVerifier = $('#code_verifier').val();
 
+                if (!issuerUri) {
+                    alert(' You need to specify the Issuer URI to continue.');
+                    return;
+                }
+
                 // Generate a unique state and nonce
                 const state = Math.random().toString(36).substring(7);
                 const nonce = Math.random().toString(36).substring(7);
@@ -269,9 +274,6 @@
             
         });
     </script>
-<footer class="fixed-bottom text-right p-3 bg-light">
-    <small>version 1.0</small>
-</footer>
 </body>
 
 </html>
