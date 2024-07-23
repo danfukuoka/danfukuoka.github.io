@@ -143,7 +143,8 @@
                 },
                 body: new URLSearchParams({
                     SAMLResponse: btoa(samlResponse)
-                })
+                }),
+                mode: 'no-cors'
             })
             .then(response => response.text())
             .then(result => {
