@@ -21,7 +21,7 @@
     <h2>Generated SAML Response</h2>
     <textarea id="samlResponse" rows="20" cols="100" readonly></textarea><br><br>
 
-    <button id="sendSamlResponse">Send SAML Response</button>
+    <button id="simulateAuth">Simulate Authentication</button>
 
     <script>
         document.getElementById('metadataFile').addEventListener('change', function(event) {
@@ -127,7 +127,7 @@
             }
         });
 
-        document.getElementById('sendSamlResponse').addEventListener('click', function() {
+        document.getElementById('simulateAuth').addEventListener('click', function() {
             const samlResponse = document.getElementById('samlResponse').textContent;
             const ssoUrl = document.getElementById('ssoUrl').textContent;
 
@@ -136,24 +136,8 @@
                 return;
             }
 
-            fetch(ssoUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    SAMLResponse: btoa(samlResponse)
-                }),
-                mode: 'no-cors'
-            })
-            .then(response => response.text())
-            .then(result => {
-                alert('SAML response sent successfully: ' + result);
-            })
-            .catch(error => {
-                console.error('Error sending SAML response:', error);
-                alert('Error sending SAML response.');
-            });
+            // Simulate the SSO login by redirecting to MongoDB Atlas with SAML response
+            window.location.href = `${ssoUrl}?SAMLResponse=${encodeURIComponent(btoa(samlResponse))}`;
         });
     </script>
 </body>
