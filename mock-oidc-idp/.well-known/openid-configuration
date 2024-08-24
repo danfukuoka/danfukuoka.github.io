@@ -1,0 +1,9 @@
+{
+  "issuer": "https://<your-github-username>.github.io/mock-oidc-idp",
+  "authorization_endpoint": "https://<your-github-username>.github.io/mock-oidc-idp/authorize.html",
+  "token_endpoint": "https://<your-github-username>.github.io/mock-oidc-idp/token.json",
+  "jwks_uri": "https://<your-github-username>.github.io/mock-oidc-idp/jwks.json",
+  "response_types_supported": ["code", "token", "id_token"],
+  "subject_types_supported": ["public"],
+  "id_token_signing_alg_values_supported": ["RS256"]
+}
