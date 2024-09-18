@@ -204,6 +204,7 @@
 
             $('#exchangeTokenButton').click(function() {
                 const authorizationCode = $('#authorizationCodeDisplay').text();
+                const codeVerifier = $('#code_verifier').val();
 
                 fetchOidcConfiguration(issuerUri, function() {
                     // Token exchange data
