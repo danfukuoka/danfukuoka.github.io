@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: callback-client-secret-java
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: callback-client-secret-java
+  template:
+    metadata:
+      labels:
+        app: callback-client-secret-java
+    spec:
+      containers:
+        - name: callback-client-secret-java
+          image: danilofukuoka/callback-client-secret-java:latest  # Your Docker image
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CONNECTION_STRING
+              value: "mongodb+srv://cluster0.xxxx.mongodb.net"  # MongoDB Connection String
+            - name: TENANT_ID
+              value: "8cc39dcf-57e4-4485-8385-99fc69a90xxx"  # Azure Tenant ID
+            - name: APP_REGISTRATION_CLIENT_ID
+              value: "b1811a9d-f22a-4de8-83e5-41b8a258xxx"  # Azure Client ID
+            - name: APP_REGISTRATION_SECRET
+              value: "z5k8Q~qh2y6Ij-Xh-NEyb7exoRTSuup.xxxxxx"  # Azure Client Secret

@@ -1,0 +1,4 @@
+docker build --platform linux/amd64 -t danilofukuoka/callback-client-secret-java:latest .
+docker push danilofukuoka/callback-client-secret-java:latest
+
+mvn clean package

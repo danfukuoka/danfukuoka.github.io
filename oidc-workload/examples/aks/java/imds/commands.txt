@@ -1,0 +1,4 @@
+docker build --platform linux/amd64 -t danilofukuoka/imds-java:latest .
+docker push danilofukuoka/imds-java:latest
+
+mvn clean package
