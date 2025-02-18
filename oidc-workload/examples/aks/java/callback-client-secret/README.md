@@ -1,7 +1,7 @@
 # Project AKS JAVA IMD OIDC
 
 ## Introduction
-This project enables authentication to MongoDB using the Azure Instance Metadata Service (IMDS) when running your application on an Azure VM. The MongoDB Java driver has built-in support for Azure authentication, utilizing OpenID Connect (OIDC) to facilitate secure and seamless access to MongoDB.
+The Java driver doesn't offer built-in support for all platforms. Instead, you must define a custom callback to use OIDC to authenticate from these platforms. To do so, use the "OIDC_CALLBACK" authentication property, as shown in the following code example:
 
 For more information on how the Java driver integrates with Azure authentication, refer to the [MongoDB Java Driver Documentation - OIDC Authentication](https://www.mongodb.com/docs/drivers/java/sync/upcoming/fundamentals/enterprise-auth/#mongodb-oidc).
 
