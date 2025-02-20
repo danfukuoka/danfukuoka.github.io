@@ -33,3 +33,6 @@ try:
     print("Databases:", databases)
 except Exception as e:
     print("Error connecting to MongoDB Atlas:", e)
+
+
+#tests
