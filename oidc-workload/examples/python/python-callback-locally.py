@@ -3,9 +3,9 @@ from pymongo import MongoClient
 from pymongo.auth_oidc import OIDCCallback, OIDCCallbackContext, OIDCCallbackResult
 
 # Define client ID, client secret, and tenant ID
-app_registration_client_id = "b1811a9d-f22a-4de8-83e5-41b8a25xxxxx"
-app_registration_client_secret = "9sM8Q~3UXvUcy5hmk5Om2JlcGY05CTVAV.1xxxxx"
-tenant_id = "8cc39dcf-57e4-4485-8385-99fc69axxxxx"
+app_registration_client_id = ""
+app_registration_client_secret = ""
+tenant_id = ""
 
 connection_string = "mongodb+srv://cluster0.cwfdw.mongodb.net"
 

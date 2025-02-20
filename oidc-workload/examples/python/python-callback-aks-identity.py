@@ -5,8 +5,8 @@ from azure.identity import DefaultAzureCredential
 from pymongo.auth_oidc import OIDCCallback, OIDCCallbackContext, OIDCCallbackResult
          
 # define callback, properties, and MongoClient
-app_registration_client_id = "9d5ea4c4-42b0-46de-8ecc-1b9f5xxxxxx"
-connection_string = "mongodb+srv://cluster0.cxxxxw.mongodb.net"
+app_registration_client_id = ""
+connection_string = ""
 
 class MyCallback(OIDCCallback):
     def fetch(self, context: OIDCCallbackContext) -> OIDCCallbackResult:
