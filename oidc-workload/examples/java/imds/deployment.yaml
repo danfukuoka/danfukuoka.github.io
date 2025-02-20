@@ -21,9 +21,9 @@ spec:
             - name: CONNECTION_STRING
               value: "mongodb+srv://cluster0.xxxx.mongodb.net"  # MongoDB Connection String. Example: mongodb+srv://cluster0.cwfdw.mongodb.net
             - name: APP_REGISTRATION_CLIENT_ID
-              value: "b1811a9d-f22a-4de8-83e5-41b8a2587xxx"  # Azure App Registration Client ID.
-            - name: MANAGED_IDENTITY_CLIENT_ID
-              value: "d230a4f2-9e23-4576-a47f-ebb0e204dxxx"  # Azure Managed Identity Client ID
+              value: ""  # Azure App Registration Client ID.
+            #- name: MANAGED_IDENTITY_CLIENT_ID
+            #  value: ""  # Azure Managed Identity Client ID
 
 
 # Addionally, add the Azure Managed Identity Object ID to Atlas Database Access.
