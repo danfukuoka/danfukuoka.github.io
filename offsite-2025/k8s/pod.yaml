@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  namespace: ns-danilo #CHANGE-ME
+  labels:
+    app: my-pod
+spec:
+  serviceAccountName: sa-danilo #CHANGE-ME
+  automountServiceAccountToken: false
+  containers:
+    - name: my-pod
+      image: danilofukuoka168/offsite-2025-k8s:latest
+      imagePullPolicy: Always
+      env:
+        - name: MONGODB_URI
+          value: "mongodb+srv://cluster0.cwfdw.mongodb.net"
+      volumeMounts:
+        - name: oidc-token
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          readOnly: true
+      resources:
+        requests:
+          memory: "512Mi"
+          cpu: "250m"
+        limits:
+          memory: "512Mi"
+          cpu: "250m"
+  volumes:
+    - name: oidc-token
+      projected:
+        sources:
+          - serviceAccountToken:
+              path: token
+              expirationSeconds: 600 #10 minutes
