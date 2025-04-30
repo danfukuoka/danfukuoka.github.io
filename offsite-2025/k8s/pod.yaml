@@ -2,19 +2,22 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: my-pod
-  namespace: ns-danilo #CHANGE-ME
+  namespace: danilo-fukuoka #CHANGE-ME
   labels:
     app: my-pod
 spec:
-  serviceAccountName: sa-danilo #CHANGE-ME
+  serviceAccountName: danilo-fukuoka #CHANGE-ME
   automountServiceAccountToken: false
+  restartPolicy: Never
   containers:
     - name: my-pod
-      image: danilofukuoka168/offsite-2025-k8s:latest
+      image: danilofukuoka168/offsite-2025-k8s:v2
       imagePullPolicy: Always
       env:
         - name: MONGODB_URI
-          value: "mongodb+srv://cluster0.cwfdw.mongodb.net"
+          value: "mongodb+srv://cluster0.3vy6o.mongodb.net"
+        - name: BONUSLY
+          value: danilo-fukuoka #CHANGE-ME
       volumeMounts:
         - name: oidc-token
           mountPath: /var/run/secrets/kubernetes.io/serviceaccount
