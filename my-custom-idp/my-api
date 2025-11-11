@@ -1,0 +1,79 @@
+from flask import Flask, jsonify, request
+import jwt
+import datetime
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives import serialization
+
+# --- CONFIG ---
+ISSUER = "http://localhost:5000"
+AUDIENCE = "example-client"
+KEY_ID = "test-key-1"
+
+# --- Generate EC key (P-256) ---
+private_key = ec.generate_private_key(ec.SECP256R1())
+public_key = private_key.public_key()
+
+# --- Convert EC public key to JWK dict manually ---
+def public_jwk():
+    numbers = public_key.public_numbers()
+    curve_name = "P-256"
+
+    def b64url_uint(val):
+        import base64, math
+        byte_length = math.ceil(val.bit_length() / 8)
+        return base64.urlsafe_b64encode(val.to_bytes(byte_length, "big")).rstrip(b"=").decode("ascii")
+
+    return {
+        "kty": "EC",
+        "use": "sig",
+        "crv": curve_name,
+        "kid": KEY_ID,
+        "alg": "ES256",
+        "x": b64url_uint(numbers.x),
+        "y": b64url_uint(numbers.y),
+    }
+
+# --- Flask app ---
+app = Flask(__name__)
+
+@app.route("/.well-known/openid-configuration")
+def well_known():
+    return jsonify({
+        "issuer": ISSUER,
+        "jwks_uri": f"{ISSUER}/jwks.json",
+        "token_endpoint": f"{ISSUER}/token",
+        "grant_types_supported": ["client_credentials"],
+        "response_types_supported": ["token"],
+        "subject_types_supported": ["public"],
+        "id_token_signing_alg_values_supported": ["ES256"]
+    })
+
+@app.route("/jwks.json")
+def jwks():
+    return jsonify({"keys": [public_jwk()]})
+
+@app.route("/token", methods=["POST"])
+def token():
+    now = datetime.datetime.utcnow()
+    payload = {
+        "iss": ISSUER,
+        "sub": "mock-user",
+        "aud": AUDIENCE,
+        "iat": now,
+        "exp": now + datetime.timedelta(minutes=5),
+        "jti": "test-token-id",
+    }
+    token = jwt.encode(
+        payload,
+        private_key,
+        algorithm="ES256",
+        headers={"kid": KEY_ID}
+    )
+    return jsonify({
+        "access_token": token,
+        "token_type": "Bearer",
+        "expires_in": 300
+    })
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
